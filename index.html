@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NeuralOS — AI Platform</title>
-<style>
-  /* System font stack — no external CDN needed */
-</style>
+<title>NeuralOS — AI Платформа</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -34,17 +31,13 @@
   --cyan-dim:rgba(6,182,212,.12);
   --font:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;
   --mono:'SF Mono','Fira Code','Cascadia Code',Consolas,monospace;
-  --serif:Georgia,'Times New Roman',serif;
   --r:10px;
   --r2:14px;
   --sidebar:220px;
-  --hdr:56px;
   --shadow:0 0 0 1px var(--border),0 4px 24px rgba(0,0,0,.4);
 }
 html{font-size:14px;-webkit-font-smoothing:antialiased}
 body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden}
-
-/* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
@@ -76,6 +69,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 .auth-switch{text-align:center;margin-top:20px;font-size:13px;color:var(--text2)}
 .auth-switch a{color:var(--accent2);cursor:pointer;text-decoration:none}
 .auth-terms{text-align:center;margin-top:12px;font-size:11px;color:var(--text3)}
+
+/* ── API KEY SETUP ── */
+.apikey-setup-note{background:var(--accent-glow);border:1px solid rgba(124,107,255,.25);border-radius:var(--r);padding:10px 14px;font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.5}
+.apikey-setup-note a{color:var(--accent2);text-decoration:none}
 
 /* ── APP SHELL ── */
 #app{display:none;flex-direction:column;min-height:100vh}
@@ -231,6 +228,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 .send-btn:hover{background:var(--accent2);transform:scale(1.05)}
 .send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
+/* ── STREAMING CURSOR ── */
+.streaming-cursor{display:inline-block;width:2px;height:14px;background:var(--accent2);animation:blink .7s infinite;margin-left:2px;vertical-align:text-bottom}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
 /* ── BILLING ── */
 .billing-body{padding:20px 28px 28px;flex:1;overflow-y:auto}
 .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
@@ -336,7 +337,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 .cmd-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:15px;font-family:var(--font)}
 .cmd-input::placeholder{color:var(--text3)}
 .cmd-results{padding:8px}
-.cmd-section-label{padding:6px 10px;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text3)}
 .cmd-result{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .1s}
 .cmd-result:hover,.cmd-result.selected{background:var(--bg3)}
 .cmd-result-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
@@ -355,15 +355,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 .toast-icon{font-size:16px;flex-shrink:0}
 .toast-text{flex:1;line-height:1.4}
 .toast-close{color:var(--text3);cursor:pointer;font-size:14px;padding:2px;flex-shrink:0;background:none;border:none;font-family:var(--font)}
-
-/* ── SKELETON ── */
-.skeleton{background:var(--bg3);border-radius:4px;animation:shimmer 1.5s infinite}
-@keyframes shimmer{0%{opacity:.4}50%{opacity:.8}100%{opacity:.4}}
-
-/* ── NOTIFICATION DOT ── */
+.insight-card{background:linear-gradient(135deg,var(--accent-glow),rgba(6,182,212,.08));border:1px solid rgba(124,107,255,.2);border-radius:var(--r2);padding:16px 18px;display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.insight-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.insight-text{font-size:13px;color:var(--text2);line-height:1.6}
+.insight-text strong{color:var(--text);font-weight:600}
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:8px 12px;cursor:text;transition:all .15s}
+.search-bar:hover{border-color:var(--border)}
+.search-bar input{background:transparent;border:none;outline:none;color:var(--text);font-size:13px;font-family:var(--font);width:180px}
+.search-bar input::placeholder{color:var(--text3)}
 .notif-dot{width:6px;height:6px;background:var(--red);border-radius:50%;position:absolute;top:6px;right:6px;border:2px solid var(--bg1)}
 
-/* ── RESPONSIVE ── */
 @media(max-width:900px){
   .sidebar{width:60px}
   .nav-item span,.sidebar-logo-name,.sidebar-section-label,.user-name,.user-plan{display:none}
@@ -376,7 +377,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   .files-grid{grid-template-columns:repeat(2,1fr)}
   .chat-sessions{display:none}
   .settings-nav{display:none}
-  --sidebar:60px
 }
 @media(max-width:600px){
   .kpi-grid{grid-template-columns:1fr}
@@ -385,23 +385,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   .realtime-bar{flex-wrap:wrap}
   .page-hdr{flex-direction:column;align-items:flex-start;gap:10px}
 }
-
-/* ── INSIGHTS WIDGET ── */
-.insight-card{background:linear-gradient(135deg,var(--accent-glow),rgba(6,182,212,.08));border:1px solid rgba(124,107,255,.2);border-radius:var(--r2);padding:16px 18px;display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
-.insight-icon{font-size:20px;flex-shrink:0;margin-top:2px}
-.insight-text{font-size:13px;color:var(--text2);line-height:1.6}
-.insight-text strong{color:var(--text);font-weight:600}
-
-/* ── SEARCH ── */
-.search-bar{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:8px 12px;cursor:text;transition:all .15s}
-.search-bar:hover{border-color:var(--border)}
-.search-bar input{background:transparent;border:none;outline:none;color:var(--text);font-size:13px;font-family:var(--font);width:180px}
-.search-bar input::placeholder{color:var(--text3)}
 </style>
 </head>
 <body>
 
-<!-- ══ AUTH SCREEN ══ -->
+<!-- ══ ЭКРАН ВХОДА ══ -->
 <div id="auth-screen">
   <div class="auth-bg"></div>
   <div class="auth-grid"></div>
@@ -410,8 +398,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
       <div class="auth-logo-mark">N</div>
       <div class="auth-logo-name">Neural<span>OS</span></div>
     </div>
-    <div class="auth-title">Welcome back</div>
-    <div class="auth-sub">Sign in to your workspace</div>
+    <div class="auth-title">Добро пожаловать</div>
+    <div class="auth-sub">Войдите в свой рабочий кабинет</div>
     <div class="auth-social">
       <button class="auth-social-btn" onclick="quickLogin()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
@@ -422,235 +410,234 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
         GitHub
       </button>
     </div>
-    <div class="auth-divider">or continue with email</div>
+    <div class="auth-divider">или войдите по email</div>
     <div class="auth-field">
-      <label class="auth-label">Email address</label>
-      <input class="auth-input" type="email" placeholder="you@company.com" value="sarah@neuralco.ai">
+      <label class="auth-label">Email адрес</label>
+      <input class="auth-input" type="email" placeholder="вы@компания.ru" value="admin@neuralco.ai">
     </div>
     <div class="auth-field">
-      <label class="auth-label">Password</label>
+      <label class="auth-label">Пароль</label>
       <input class="auth-input" type="password" placeholder="••••••••" value="••••••••">
     </div>
-    <button class="auth-btn" onclick="quickLogin()">Sign in to NeuralOS →</button>
-    <div class="auth-switch">Don't have an account? <a onclick="quickLogin()">Sign up free</a></div>
-    <div class="auth-terms">By signing in, you agree to our Terms & Privacy Policy</div>
+    <div class="auth-field">
+      <label class="auth-label">🔑 API-ключ Anthropic <span style="color:var(--text3);font-weight:400">(для работы чата)</span></label>
+      <div class="apikey-setup-note">Получите ключ на <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys. Без ключа чат работает в демо-режиме.</div>
+      <input class="auth-input" id="login-api-key" type="password" placeholder="sk-ant-..." autocomplete="off">
+    </div>
+    <button class="auth-btn" onclick="quickLogin()">Войти в NeuralOS →</button>
+    <div class="auth-switch">Нет аккаунта? <a onclick="quickLogin()">Зарегистрируйтесь бесплатно</a></div>
+    <div class="auth-terms">Входя, вы соглашаетесь с Условиями использования и Политикой конфиденциальности</div>
   </div>
 </div>
 
-<!-- ══ APP ══ -->
+<!-- ══ ПРИЛОЖЕНИЕ ══ -->
 <div id="app">
-  <!-- SIDEBAR -->
   <div class="app-inner">
+    <!-- БОКОВОЕ МЕНЮ -->
     <div class="sidebar">
       <div class="sidebar-logo">
         <div class="sidebar-logo-mark">N</div>
         <div class="sidebar-logo-name">Neural<span>OS</span></div>
       </div>
       <div class="sidebar-section">
-        <div class="sidebar-section-label">Main</div>
+        <div class="sidebar-section-label">Главное</div>
         <div class="sidebar-nav">
           <div class="nav-item active" onclick="showPage('dashboard')">
             <span class="nav-icon">⬡</span>
-            <span>Dashboard</span>
+            <span>Дашборд</span>
           </div>
           <div class="nav-item" onclick="showPage('chat')">
             <span class="nav-icon">◈</span>
-            <span>AI Workspace</span>
+            <span>AI Рабочий стол</span>
             <span class="nav-badge">3</span>
           </div>
           <div class="nav-item" onclick="showPage('files')">
             <span class="nav-icon">◫</span>
-            <span>Files</span>
+            <span>Файлы</span>
           </div>
         </div>
       </div>
       <div class="sidebar-section">
-        <div class="sidebar-section-label">Account</div>
+        <div class="sidebar-section-label">Аккаунт</div>
         <div class="sidebar-nav">
           <div class="nav-item" onclick="showPage('billing')">
             <span class="nav-icon">◎</span>
-            <span>Billing</span>
+            <span>Тарифы</span>
           </div>
           <div class="nav-item" onclick="showPage('settings')">
             <span class="nav-icon">◌</span>
-            <span>Settings</span>
-            <div class="notif-dot" style="display:none" id="settings-dot"></div>
+            <span>Настройки</span>
           </div>
         </div>
       </div>
       <div style="padding:8px 10px;margin-top:8px">
         <div class="search-bar" onclick="openCmd()">
           <span style="color:var(--text3);font-size:13px">⌘</span>
-          <input placeholder="Search…" readonly>
+          <input placeholder="Поиск…" readonly>
           <span style="font-size:10px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-family:var(--mono)">K</span>
         </div>
       </div>
       <div class="sidebar-user">
         <div class="sidebar-user-inner" onclick="showPage('settings')">
-          <div class="user-avatar">SL</div>
+          <div class="user-avatar">АИ</div>
           <div>
-            <div class="user-name">Sarah Lin</div>
-            <div class="user-plan">Pro Plan · 12k tokens</div>
+            <div class="user-name">Администратор</div>
+            <div class="user-plan">Pro план · 12k токенов</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- MAIN CONTENT -->
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
     <div class="main">
 
-      <!-- ── DASHBOARD ── -->
+      <!-- ── ДАШБОРД ── -->
       <div class="page active" id="page-dashboard">
         <div class="page-hdr">
           <div>
-            <div class="page-title">Good morning, Sarah ☀️</div>
-            <div class="page-sub">Here's what's happening with your workspace today</div>
+            <div class="page-title">Доброе утро ☀️</div>
+            <div class="page-sub">Обзор вашего рабочего пространства за сегодня</div>
           </div>
           <div class="page-actions">
-            <button class="btn btn-ghost" onclick="showCmd()">⌘ Command</button>
-            <button class="btn btn-primary" onclick="showPage('chat')">+ New AI Chat</button>
+            <button class="btn btn-ghost" onclick="openCmd()">⌘ Команды</button>
+            <button class="btn btn-primary" onclick="showPage('chat')">+ Новый AI Чат</button>
           </div>
         </div>
         <div class="dash-body">
-          <!-- AI Insight -->
           <div class="insight-card">
             <div class="insight-icon">✦</div>
             <div class="insight-text">
-              <strong>AI Insight:</strong> Your token usage is up <strong>34%</strong> this week — mostly from the customer support automation you set up. Consider upgrading to Pro Max for unlimited AI calls. Revenue per token improved by <strong>$0.0012</strong> over last month.
+              <strong>AI Аналитика:</strong> Использование токенов выросло на <strong>34%</strong> за эту неделю — преимущественно благодаря автоматизации поддержки клиентов. Рассмотрите переход на Pro Max для неограниченных AI-вызовов. Выручка на токен улучшилась на <strong>₸1.2</strong> за прошлый месяц.
             </div>
           </div>
-          <!-- Realtime bar -->
           <div class="realtime-bar">
             <div class="rt-stat">
               <div class="rt-dot"></div>
               <div>
-                <div class="rt-label">Active Users</div>
-                <div class="rt-val" id="rt-users">1,247</div>
+                <div class="rt-label">Активные пользователи</div>
+                <div class="rt-val" id="rt-users">1 247</div>
               </div>
             </div>
             <div class="rt-stat">
               <div class="rt-dot"></div>
               <div>
-                <div class="rt-label">API Calls / min</div>
+                <div class="rt-label">API вызовов/мин</div>
                 <div class="rt-val" id="rt-calls">84</div>
               </div>
             </div>
             <div class="rt-stat">
               <div class="rt-dot"></div>
               <div>
-                <div class="rt-label">Latency (p95)</div>
-                <div class="rt-val" id="rt-latency">142ms</div>
+                <div class="rt-label">Задержка (p95)</div>
+                <div class="rt-val" id="rt-latency">142мс</div>
               </div>
             </div>
             <div class="rt-stat">
               <div class="rt-dot"></div>
               <div>
-                <div class="rt-label">Uptime</div>
+                <div class="rt-label">Доступность</div>
                 <div class="rt-val" style="color:var(--green)">99.98%</div>
               </div>
             </div>
           </div>
-          <!-- KPIs -->
           <div class="kpi-grid">
             <div class="kpi-card c-purple">
-              <div class="kpi-label">Monthly Revenue</div>
-              <div class="kpi-value">$48,290</div>
-              <div class="kpi-change up">↑ 18.2% vs last month</div>
+              <div class="kpi-label">Месячная выручка</div>
+              <div class="kpi-value">₸21.7М</div>
+              <div class="kpi-change up">↑ 18.2% к прошлому месяцу</div>
             </div>
             <div class="kpi-card c-green">
-              <div class="kpi-label">Active Subscriptions</div>
-              <div class="kpi-value">2,841</div>
-              <div class="kpi-change up">↑ 241 new this month</div>
+              <div class="kpi-label">Активные подписки</div>
+              <div class="kpi-value">2 841</div>
+              <div class="kpi-change up">↑ 241 новых за месяц</div>
             </div>
             <div class="kpi-card c-cyan">
-              <div class="kpi-label">AI Tokens Used</div>
-              <div class="kpi-value">12.4M</div>
-              <div class="kpi-change neutral">72% of monthly limit</div>
+              <div class="kpi-label">Использовано AI токенов</div>
+              <div class="kpi-value">12.4М</div>
+              <div class="kpi-change neutral">72% месячного лимита</div>
             </div>
             <div class="kpi-card c-amber">
-              <div class="kpi-label">Churn Rate</div>
+              <div class="kpi-label">Отток клиентов</div>
               <div class="kpi-value">1.8%</div>
-              <div class="kpi-change up">↓ 0.4% improvement</div>
+              <div class="kpi-change up">↓ 0.4% улучшение</div>
             </div>
           </div>
-          <!-- Charts -->
           <div class="charts-grid">
             <div class="chart-card">
               <div class="chart-hdr">
-                <div class="chart-title">Revenue Overview</div>
+                <div class="chart-title">Обзор выручки</div>
                 <div class="chart-period">
-                  <button class="period-btn">7D</button>
-                  <button class="period-btn active">30D</button>
-                  <button class="period-btn">90D</button>
+                  <button class="period-btn">7Д</button>
+                  <button class="period-btn active">30Д</button>
+                  <button class="period-btn">90Д</button>
                 </div>
               </div>
               <canvas id="revenueChart" height="100"></canvas>
             </div>
             <div class="chart-card">
               <div class="chart-hdr">
-                <div class="chart-title">Plan Distribution</div>
+                <div class="chart-title">Распределение по тарифам</div>
               </div>
               <canvas id="planChart" height="120"></canvas>
             </div>
           </div>
-          <!-- Bottom -->
           <div class="bottom-grid">
             <div class="table-card">
               <div class="table-hdr">
-                <div class="table-title">Recent Transactions</div>
-                <button class="btn btn-ghost btn-sm">View all</button>
+                <div class="table-title">Последние транзакции</div>
+                <button class="btn btn-ghost btn-sm">Все</button>
               </div>
               <table class="data-table">
                 <thead>
-                  <tr><th>Customer</th><th>Amount</th><th>Status</th></tr>
+                  <tr><th>Клиент</th><th>Сумма</th><th>Статус</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>Acme Corp</td><td style="font-family:var(--mono)">$299/mo</td><td><span class="status-pill pill-green">Paid</span></td></tr>
-                  <tr><td>TechFlow Inc</td><td style="font-family:var(--mono)">$99/mo</td><td><span class="status-pill pill-green">Paid</span></td></tr>
-                  <tr><td>Startup XYZ</td><td style="font-family:var(--mono)">$499/mo</td><td><span class="status-pill pill-amber">Pending</span></td></tr>
-                  <tr><td>Devs United</td><td style="font-family:var(--mono)">$29/mo</td><td><span class="status-pill pill-green">Paid</span></td></tr>
-                  <tr><td>MegaTech Ltd</td><td style="font-family:var(--mono)">$999/mo</td><td><span class="status-pill pill-red">Failed</span></td></tr>
+                  <tr><td>ТехноКорп</td><td style="font-family:var(--mono)">₸134 500/мес</td><td><span class="status-pill pill-green">Оплачено</span></td></tr>
+                  <tr><td>Стартап XYZ</td><td style="font-family:var(--mono)">₸44 500/мес</td><td><span class="status-pill pill-green">Оплачено</span></td></tr>
+                  <tr><td>ДевПро ТОО</td><td style="font-family:var(--mono)">₸224 500/мес</td><td><span class="status-pill pill-amber">Ожидание</span></td></tr>
+                  <tr><td>КазДев</td><td style="font-family:var(--mono)">₸13 050/мес</td><td><span class="status-pill pill-green">Оплачено</span></td></tr>
+                  <tr><td>МегаТех АО</td><td style="font-family:var(--mono)">₸449 500/мес</td><td><span class="status-pill pill-red">Отклонено</span></td></tr>
                 </tbody>
               </table>
             </div>
             <div class="activity-feed">
               <div class="table-hdr">
-                <div class="table-title">Activity Log</div>
-                <button class="btn btn-ghost btn-sm">Filter</button>
+                <div class="table-title">Журнал активности</div>
+                <button class="btn btn-ghost btn-sm">Фильтр</button>
               </div>
               <div class="activity-item">
                 <div class="act-icon purple">✦</div>
                 <div class="act-body">
-                  <div class="act-text"><strong>AI analysis</strong> completed on Q3-report.pdf — 8 insights generated</div>
-                  <div class="act-time">2 minutes ago</div>
+                  <div class="act-text"><strong>AI анализ</strong> завершён по Q3-отчёт.pdf — сформировано 8 инсайтов</div>
+                  <div class="act-time">2 минуты назад</div>
                 </div>
               </div>
               <div class="activity-item">
                 <div class="act-icon green">+</div>
                 <div class="act-body">
-                  <div class="act-text"><strong>New user</strong> Alex Chen joined the workspace</div>
-                  <div class="act-time">14 minutes ago</div>
+                  <div class="act-text"><strong>Новый пользователь</strong> Алексей Чен подключился к рабочему пространству</div>
+                  <div class="act-time">14 минут назад</div>
                 </div>
               </div>
               <div class="activity-item">
                 <div class="act-icon cyan">↑</div>
                 <div class="act-body">
-                  <div class="act-text"><strong>Acme Corp</strong> upgraded from Pro to Enterprise</div>
-                  <div class="act-time">1 hour ago</div>
+                  <div class="act-text"><strong>ТехноКорп</strong> перешёл с Pro на Enterprise</div>
+                  <div class="act-time">1 час назад</div>
                 </div>
               </div>
               <div class="activity-item">
                 <div class="act-icon amber">!</div>
                 <div class="act-body">
-                  <div class="act-text">API rate limit warning — 85% threshold reached</div>
-                  <div class="act-time">3 hours ago</div>
+                  <div class="act-text">Предупреждение API — достигнуто 85% лимита запросов</div>
+                  <div class="act-time">3 часа назад</div>
                 </div>
               </div>
               <div class="activity-item">
                 <div class="act-icon purple">↺</div>
                 <div class="act-body">
-                  <div class="act-text"><strong>Webhook</strong> stripe.payment_succeeded fired successfully</div>
-                  <div class="act-time">5 hours ago</div>
+                  <div class="act-text"><strong>Вебхук</strong> stripe.payment_succeeded выполнен успешно</div>
+                  <div class="act-time">5 часов назад</div>
                 </div>
               </div>
             </div>
@@ -658,44 +645,43 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
         </div>
       </div>
 
-      <!-- ── AI CHAT ── -->
+      <!-- ── AI РАБОЧИЙ СТОЛ ── -->
       <div class="page" id="page-chat">
         <div class="chat-layout">
-          <!-- Sessions sidebar -->
           <div class="chat-sessions">
             <div class="chat-sessions-hdr">
-              <div class="chat-sessions-title">Conversations</div>
-              <button class="new-chat-btn" onclick="newChat()">+ New chat</button>
+              <div class="chat-sessions-title">Беседы</div>
+              <button class="new-chat-btn" onclick="newChat()">+ Новый чат</button>
             </div>
             <div class="session-list" id="session-list">
               <div class="session-item active">
-                <div class="session-name">Product roadmap analysis</div>
-                <div class="session-preview">What are the key features...</div>
-                <div class="session-time">Just now</div>
+                <div class="session-name">Анализ продуктовой дорожной карты</div>
+                <div class="session-preview">Какие ключевые функции...</div>
+                <div class="session-time">Только что</div>
               </div>
               <div class="session-item">
-                <div class="session-name">Code review assistant</div>
-                <div class="session-preview">Here's the TypeScript interface...</div>
-                <div class="session-time">2h ago</div>
+                <div class="session-name">Ревью кода</div>
+                <div class="session-preview">Вот TypeScript интерфейс...</div>
+                <div class="session-time">2ч назад</div>
               </div>
               <div class="session-item">
-                <div class="session-name">Q3 report insights</div>
-                <div class="session-preview">Based on the data you shared...</div>
-                <div class="session-time">Yesterday</div>
+                <div class="session-name">Инсайты Q3 отчёта</div>
+                <div class="session-preview">На основе ваших данных...</div>
+                <div class="session-time">Вчера</div>
               </div>
             </div>
           </div>
-          <!-- Chat area -->
           <div class="chat-main">
             <div class="chat-hdr">
               <div class="chat-hdr-left">
                 <div>
-                  <div style="font-size:14px;font-weight:600">Product roadmap analysis</div>
-                  <div style="font-size:11px;color:var(--text3);margin-top:1px">Session started 12 min ago · 8 messages</div>
+                  <div style="font-size:14px;font-weight:600">Анализ продуктовой дорожной карты</div>
+                  <div style="font-size:11px;color:var(--text3);margin-top:1px">Сессия начата 12 мин назад · 8 сообщений</div>
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:8px">
-                <div class="model-badge">✦ GPT-4o</div>
+                <div class="model-badge" id="model-badge">✦ Claude Sonnet</div>
+                <div id="api-status" style="font-size:11px;color:var(--text3)"></div>
                 <button class="btn btn-ghost btn-sm">⋯</button>
               </div>
             </div>
@@ -704,44 +690,21 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
                 <div class="msg">
                   <div class="msg-avatar ai">N</div>
                   <div>
-                    <div class="msg-bubble">Hello! I'm your NeuralOS assistant. I can help you analyze documents, write code, answer questions, and much more. What would you like to work on today?</div>
-                    <div class="msg-meta">NeuralOS AI · Just now</div>
-                  </div>
-                </div>
-              </div>
-              <div class="msg-group">
-                <div class="msg user">
-                  <div class="msg-avatar user">SL</div>
-                  <div>
-                    <div class="msg-bubble">Can you help me analyze our product roadmap and identify the highest-impact features for Q4?</div>
-                    <div class="msg-meta">Sarah · 10 min ago</div>
-                  </div>
-                </div>
-              </div>
-              <div class="msg-group">
-                <div class="msg">
-                  <div class="msg-avatar ai">N</div>
-                  <div>
-                    <div class="msg-bubble">Absolutely! To prioritize effectively for Q4, I'd recommend the <strong>RICE framework</strong> (Reach, Impact, Confidence, Effort). Here's how to think about it:<br><br>
-<pre>Priority Score = (Reach × Impact × Confidence) / Effort</pre>
-Based on typical SaaS patterns, features to consider:<br><br>
-<strong>🔥 High priority:</strong> AI-powered onboarding, Usage analytics dashboard, Team collaboration features<br><br>
-<strong>📊 Medium priority:</strong> Advanced API rate limiting, Custom webhooks, SSO/SAML integration<br><br>
-Could you share your current roadmap or the specific features you're evaluating? I can help score them quantitatively.</div>
-                    <div class="msg-meta">NeuralOS AI · 8 min ago · 412 tokens</div>
+                    <div class="msg-bubble">Привет! Я ваш NeuralOS-ассистент на базе Claude AI. Могу помочь с анализом документов, написанием кода, ответами на вопросы и многим другим. Над чем будем работать сегодня?</div>
+                    <div class="msg-meta">NeuralOS AI · Только что</div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="chat-input-area">
               <div class="chat-toolbar">
-                <button class="chat-tool-btn" onclick="showToast('File upload ready','info')">📎 Attach file</button>
-                <button class="chat-tool-btn" onclick="showToast('Web search enabled','info')">🌐 Web search</button>
-                <button class="chat-tool-btn">📝 Templates</button>
-                <div style="margin-left:auto;font-size:11px;color:var(--text3)">3,588 / 8,192 tokens</div>
+                <button class="chat-tool-btn" onclick="showToast('Загрузка файла готова','info')">📎 Прикрепить файл</button>
+                <button class="chat-tool-btn" onclick="showToast('Веб-поиск включён','info')">🌐 Веб-поиск</button>
+                <button class="chat-tool-btn">📝 Шаблоны</button>
+                <div style="margin-left:auto;font-size:11px;color:var(--text3)" id="token-counter">0 / 8 192 токенов</div>
               </div>
               <div class="chat-input-wrap">
-                <textarea class="chat-textarea" id="chat-input" placeholder="Ask NeuralOS anything…" rows="1" onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
+                <textarea class="chat-textarea" id="chat-input" placeholder="Спросите NeuralOS что угодно…" rows="1" onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
                 <button class="send-btn" id="send-btn" onclick="sendMessage()">→</button>
               </div>
             </div>
@@ -749,216 +712,190 @@ Could you share your current roadmap or the specific features you're evaluating?
         </div>
       </div>
 
-      <!-- ── BILLING ── -->
+      <!-- ── ТАРИФЫ ── -->
       <div class="page" id="page-billing">
         <div class="page-hdr">
           <div>
-            <div class="page-title">Billing &amp; Plans</div>
-            <div class="page-sub">Manage your subscription and payment methods</div>
+            <div class="page-title">Тарифы и оплата</div>
+            <div class="page-sub">Управление подпиской и способами оплаты</div>
           </div>
         </div>
         <div class="billing-body">
           <div class="pricing-grid">
-            <!-- Starter -->
             <div class="plan-card">
-              <div class="plan-name">Starter</div>
-              <div class="plan-price">
-                <div class="plan-amount">$29</div>
-                <div class="plan-per">/month</div>
-              </div>
-              <div class="plan-desc">Perfect for individuals and small projects</div>
+              <div class="plan-name">Стартер</div>
+              <div class="plan-price"><div class="plan-amount">₸13 000</div><div class="plan-per">/мес</div></div>
+              <div class="plan-desc">Для частных лиц и небольших проектов</div>
               <ul class="plan-features">
-                <li>1M tokens / month</li>
-                <li>5 team members</li>
-                <li>Basic analytics</li>
-                <li>Email support</li>
-                <li class="missing">Custom AI models</li>
+                <li>1М токенов в месяц</li>
+                <li>5 участников команды</li>
+                <li>Базовая аналитика</li>
+                <li>Email-поддержка</li>
+                <li class="missing">Свои AI модели</li>
                 <li class="missing">SSO / SAML</li>
-                <li class="missing">SLA guarantee</li>
+                <li class="missing">Гарантия SLA</li>
               </ul>
-              <button class="plan-btn" onclick="showToast('Downgraded to Starter','info')">Downgrade</button>
+              <button class="plan-btn" onclick="showToast('Переход на Стартер','info')">Перейти</button>
             </div>
-            <!-- Pro (featured) -->
             <div class="plan-card featured">
-              <div class="plan-badge">Current Plan</div>
+              <div class="plan-badge">Текущий план</div>
               <div class="plan-name">Pro</div>
-              <div class="plan-price">
-                <div class="plan-amount">$99</div>
-                <div class="plan-per">/month</div>
-              </div>
-              <div class="plan-desc">For growing teams that need more AI power</div>
+              <div class="plan-price"><div class="plan-amount">₸44 500</div><div class="plan-per">/мес</div></div>
+              <div class="plan-desc">Для растущих команд, которым нужна мощь AI</div>
               <ul class="plan-features">
-                <li>15M tokens / month</li>
-                <li>25 team members</li>
-                <li>Advanced analytics</li>
-                <li>Priority support</li>
-                <li>Custom AI models</li>
+                <li>15М токенов в месяц</li>
+                <li>25 участников команды</li>
+                <li>Расширенная аналитика</li>
+                <li>Приоритетная поддержка</li>
+                <li>Свои AI модели</li>
                 <li class="missing">SSO / SAML</li>
-                <li class="missing">SLA guarantee</li>
+                <li class="missing">Гарантия SLA</li>
               </ul>
-              <button class="plan-btn active-plan">Current plan ✓</button>
+              <button class="plan-btn active-plan">Текущий план ✓</button>
             </div>
-            <!-- Enterprise -->
             <div class="plan-card">
               <div class="plan-name">Enterprise</div>
-              <div class="plan-price">
-                <div class="plan-amount">$299</div>
-                <div class="plan-per">/month</div>
-              </div>
-              <div class="plan-desc">For large teams with advanced requirements</div>
+              <div class="plan-price"><div class="plan-amount">₸134 500</div><div class="plan-per">/мес</div></div>
+              <div class="plan-desc">Для крупных команд с высокими требованиями</div>
               <ul class="plan-features">
-                <li>Unlimited tokens</li>
-                <li>Unlimited members</li>
-                <li>Custom dashboards</li>
-                <li>Dedicated support</li>
-                <li>Custom AI models</li>
+                <li>Безлимитные токены</li>
+                <li>Неограниченные участники</li>
+                <li>Кастомные дашборды</li>
+                <li>Выделенная поддержка</li>
+                <li>Свои AI модели</li>
                 <li>SSO / SAML</li>
-                <li>99.9% SLA</li>
+                <li>SLA 99.9%</li>
               </ul>
-              <button class="plan-btn" onclick="showToast('Upgrade to Enterprise — contact sales@neuralco.ai','info')">Upgrade →</button>
+              <button class="plan-btn" onclick="showToast('Переход на Enterprise — свяжитесь с отделом продаж','info')">Перейти →</button>
             </div>
           </div>
-          <!-- Usage meters -->
           <div class="billing-section">
             <div class="billing-section-hdr">
-              <div class="billing-section-title">Current Usage</div>
-              <span style="font-size:12px;color:var(--text2)">Resets Jun 1, 2026</span>
+              <div class="billing-section-title">Текущее использование</div>
+              <span style="font-size:12px;color:var(--text2)">Сброс 1 июня 2026</span>
             </div>
             <div class="usage-bar-wrap">
               <div class="usage-item">
-                <div class="usage-label"><span>AI Tokens</span><span>12.4M / 15M</span></div>
+                <div class="usage-label"><span>AI Токены</span><span>12.4М / 15М</span></div>
                 <div class="usage-bar"><div class="usage-fill purple" style="width:83%"></div></div>
               </div>
               <div class="usage-item">
-                <div class="usage-label"><span>Storage</span><span>4.2 GB / 10 GB</span></div>
+                <div class="usage-label"><span>Хранилище</span><span>4.2 ГБ / 10 ГБ</span></div>
                 <div class="usage-bar"><div class="usage-fill cyan" style="width:42%"></div></div>
               </div>
               <div class="usage-item">
-                <div class="usage-label"><span>API Calls</span><span>48,291 / 100,000</span></div>
+                <div class="usage-label"><span>API Вызовы</span><span>48 291 / 100 000</span></div>
                 <div class="usage-bar"><div class="usage-fill green" style="width:48%"></div></div>
               </div>
             </div>
           </div>
-          <!-- Payment history -->
           <div class="billing-section">
             <div class="billing-section-hdr">
-              <div class="billing-section-title">Payment History</div>
-              <button class="btn btn-ghost btn-sm" onclick="showToast('Downloading invoices…','info')">⬇ Download all</button>
+              <div class="billing-section-title">История платежей</div>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Загружаем счета…','info')">⬇ Скачать все</button>
             </div>
             <table class="data-table">
-              <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Invoice</th></tr></thead>
+              <thead><tr><th>Дата</th><th>Описание</th><th>Сумма</th><th>Счёт</th></tr></thead>
               <tbody>
-                <tr><td>May 1, 2026</td><td>Pro Plan — May 2026</td><td style="font-family:var(--mono)">$99.00</td><td><a style="color:var(--accent2);cursor:pointer" onclick="showToast('Downloading INV-2026-05','info')">INV-2026-05</a></td></tr>
-                <tr><td>Apr 1, 2026</td><td>Pro Plan — Apr 2026</td><td style="font-family:var(--mono)">$99.00</td><td><a style="color:var(--accent2);cursor:pointer" onclick="showToast('Downloading INV-2026-04','info')">INV-2026-04</a></td></tr>
-                <tr><td>Mar 1, 2026</td><td>Pro Plan — Mar 2026</td><td style="font-family:var(--mono)">$99.00</td><td><a style="color:var(--accent2);cursor:pointer">INV-2026-03</a></td></tr>
+                <tr><td>1 мая 2026</td><td>Pro план — май 2026</td><td style="font-family:var(--mono)">₸44 500</td><td><a style="color:var(--accent2);cursor:pointer" onclick="showToast('Скачиваем СЧ-2026-05','info')">СЧ-2026-05</a></td></tr>
+                <tr><td>1 апр 2026</td><td>Pro план — апрель 2026</td><td style="font-family:var(--mono)">₸44 500</td><td><a style="color:var(--accent2);cursor:pointer" onclick="showToast('Скачиваем СЧ-2026-04','info')">СЧ-2026-04</a></td></tr>
+                <tr><td>1 мар 2026</td><td>Pro план — март 2026</td><td style="font-family:var(--mono)">₸44 500</td><td><a style="color:var(--accent2);cursor:pointer">СЧ-2026-03</a></td></tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- ── FILES ── -->
+      <!-- ── ФАЙЛЫ ── -->
       <div class="page" id="page-files">
         <div class="page-hdr">
           <div>
-            <div class="page-title">File Storage</div>
-            <div class="page-sub">4.2 GB used of 10 GB · 47 files</div>
+            <div class="page-title">Файловое хранилище</div>
+            <div class="page-sub">Использовано 4.2 ГБ из 10 ГБ · 47 файлов</div>
           </div>
           <div class="page-actions">
-            <button class="btn btn-ghost">Sort ↕</button>
-            <button class="btn btn-primary" onclick="triggerUpload()">↑ Upload files</button>
+            <button class="btn btn-ghost">Сортировка ↕</button>
+            <button class="btn btn-primary" onclick="triggerUpload()">↑ Загрузить файлы</button>
           </div>
         </div>
         <div class="files-body">
-          <!-- Upload zone -->
           <div class="upload-zone" id="upload-zone" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)" onclick="triggerUpload()">
             <div class="upload-icon">☁</div>
-            <div class="upload-title">Drag & drop files here</div>
-            <div class="upload-sub">or <span>browse your computer</span> to upload · PDF, DOCX, images, code up to 100MB</div>
+            <div class="upload-title">Перетащите файлы сюда</div>
+            <div class="upload-sub">или <span>выберите на компьютере</span> · PDF, DOCX, изображения, код до 100МБ</div>
           </div>
-          <!-- Upload in progress -->
           <div class="upload-progress" id="upload-progress" style="display:none">
             <div class="progress-top">
-              <span>Uploading <strong>financial-analysis-2026.pdf</strong></span>
+              <span>Загружается <strong>финансовый-анализ-2026.pdf</strong></span>
               <span style="color:var(--text2)">78%</span>
             </div>
             <div class="progress-bar"><div class="progress-fill"></div></div>
           </div>
-          <!-- File grid -->
-          <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">Recent files</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">Последние файлы</div>
           <div class="files-grid">
-            <div class="file-card" onclick="showToast('Opening Q3-Report.pdf with AI…','info')">
+            <div class="file-card" onclick="showToast('Открываем Q3-отчёт.pdf с AI…','info')">
               <div class="file-icon">📄</div>
-              <div class="file-name">Q3-Report.pdf</div>
-              <div class="file-meta">2.4 MB · PDF · 3 days ago</div>
+              <div class="file-name">Q3-отчёт.pdf</div>
+              <div class="file-meta">2.4 МБ · PDF · 3 дня назад</div>
               <div class="file-actions">
-                <button class="file-action">✦ Analyze</button>
+                <button class="file-action">✦ Анализ</button>
                 <button class="file-action">↓</button>
               </div>
             </div>
             <div class="file-card">
               <div class="file-icon">🖼</div>
-              <div class="file-name">dashboard-mockup.png</div>
-              <div class="file-meta">1.8 MB · PNG · 5 days ago</div>
+              <div class="file-name">макет-дашборда.png</div>
+              <div class="file-meta">1.8 МБ · PNG · 5 дней назад</div>
               <div class="file-actions">
-                <button class="file-action" onclick="showToast('AI analyzing image…','info')">✦ Analyze</button>
+                <button class="file-action" onclick="showToast('AI анализирует изображение…','info')">✦ Анализ</button>
                 <button class="file-action">↓</button>
               </div>
             </div>
             <div class="file-card">
               <div class="file-icon">📊</div>
-              <div class="file-name">revenue-data-Q3.xlsx</div>
-              <div class="file-meta">384 KB · Excel · 1 week ago</div>
+              <div class="file-name">выручка-Q3.xlsx</div>
+              <div class="file-meta">384 КБ · Excel · 1 неделю назад</div>
               <div class="file-actions">
-                <button class="file-action" onclick="showToast('Generating chart insights…','info')">✦ Analyze</button>
+                <button class="file-action" onclick="showToast('Генерируем аналитику…','info')">✦ Анализ</button>
                 <button class="file-action">↓</button>
               </div>
             </div>
             <div class="file-card">
               <div class="file-icon">⌨</div>
-              <div class="file-name">api-integration.ts</div>
-              <div class="file-meta">28 KB · TypeScript · 2 weeks ago</div>
+              <div class="file-name">api-интеграция.ts</div>
+              <div class="file-meta">28 КБ · TypeScript · 2 недели назад</div>
               <div class="file-actions">
-                <button class="file-action" onclick="showToast('Code review initiated…','info')">✦ Review</button>
+                <button class="file-action" onclick="showToast('Проверка кода запущена…','info')">✦ Ревью</button>
                 <button class="file-action">↓</button>
               </div>
             </div>
             <div class="file-card">
               <div class="file-icon">📝</div>
-              <div class="file-name">product-spec-v4.docx</div>
-              <div class="file-meta">890 KB · Word · 2 weeks ago</div>
+              <div class="file-name">спецификация-v4.docx</div>
+              <div class="file-meta">890 КБ · Word · 2 недели назад</div>
               <div class="file-actions">
-                <button class="file-action" onclick="showToast('Summarizing document…','info')">✦ Summarize</button>
-                <button class="file-action">↓</button>
-              </div>
-            </div>
-            <div class="file-card">
-              <div class="file-icon">🔗</div>
-              <div class="file-name">schema-v2.sql</div>
-              <div class="file-meta">14 KB · SQL · 3 weeks ago</div>
-              <div class="file-actions">
-                <button class="file-action" onclick="showToast('Analyzing schema…','info')">✦ Analyze</button>
+                <button class="file-action" onclick="showToast('Суммируем документ…','info')">✦ Сводка</button>
                 <button class="file-action">↓</button>
               </div>
             </div>
             <div class="file-card" style="border-style:dashed;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;min-height:130px" onclick="triggerUpload()">
               <div style="font-size:24px;color:var(--text3);margin-bottom:6px">+</div>
-              <div style="font-size:12px;color:var(--text3)">Upload new file</div>
+              <div style="font-size:12px;color:var(--text3)">Загрузить новый файл</div>
             </div>
           </div>
-          <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;margin-top:8px">Storage breakdown</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;margin-top:8px">Использование хранилища</div>
           <div class="billing-section" style="margin-bottom:0">
             <div class="usage-bar-wrap">
               <div class="usage-item">
-                <div class="usage-label"><span>Documents</span><span>2.1 GB</span></div>
+                <div class="usage-label"><span>Документы</span><span>2.1 ГБ</span></div>
                 <div class="usage-bar"><div class="usage-fill purple" style="width:50%"></div></div>
               </div>
               <div class="usage-item">
-                <div class="usage-label"><span>Images</span><span>1.4 GB</span></div>
+                <div class="usage-label"><span>Изображения</span><span>1.4 ГБ</span></div>
                 <div class="usage-bar"><div class="usage-fill cyan" style="width:33%"></div></div>
               </div>
               <div class="usage-item">
-                <div class="usage-label"><span>Code & Data</span><span>700 MB</span></div>
+                <div class="usage-label"><span>Код и данные</span><span>700 МБ</span></div>
                 <div class="usage-bar"><div class="usage-fill green" style="width:17%"></div></div>
               </div>
             </div>
@@ -966,194 +903,168 @@ Could you share your current roadmap or the specific features you're evaluating?
         </div>
       </div>
 
-      <!-- ── SETTINGS ── -->
+      <!-- ── НАСТРОЙКИ ── -->
       <div class="page" id="page-settings">
         <div class="page-hdr">
           <div>
-            <div class="page-title">Settings</div>
-            <div class="page-sub">Manage your account and workspace preferences</div>
+            <div class="page-title">Настройки</div>
+            <div class="page-sub">Управление аккаунтом и рабочим пространством</div>
           </div>
         </div>
         <div class="settings-layout">
           <div class="settings-nav">
-            <div class="settings-nav-item active" onclick="switchSettingsTab(this,'profile')">👤 Profile</div>
-            <div class="settings-nav-item" onclick="switchSettingsTab(this,'team')">👥 Team</div>
-            <div class="settings-nav-item" onclick="switchSettingsTab(this,'notifications')">🔔 Notifications</div>
-            <div class="settings-nav-item" onclick="switchSettingsTab(this,'api')">🔑 API Keys</div>
-            <div class="settings-nav-item" onclick="switchSettingsTab(this,'appearance')">🎨 Appearance</div>
-            <div class="settings-nav-item" style="color:var(--red)" onclick="logout()">← Sign out</div>
+            <div class="settings-nav-item active" onclick="switchSettingsTab(this,'profile')">👤 Профиль</div>
+            <div class="settings-nav-item" onclick="switchSettingsTab(this,'api')">🔑 API Ключ</div>
+            <div class="settings-nav-item" onclick="switchSettingsTab(this,'team')">👥 Команда</div>
+            <div class="settings-nav-item" onclick="switchSettingsTab(this,'notifications')">🔔 Уведомления</div>
+            <div class="settings-nav-item" onclick="switchSettingsTab(this,'appearance')">🎨 Внешний вид</div>
+            <div class="settings-nav-item" style="color:var(--red)" onclick="logout()">← Выйти</div>
           </div>
           <div class="settings-content">
-            <!-- Profile tab -->
+            <!-- Профиль -->
             <div id="settings-profile">
               <div class="settings-section">
                 <div class="avatar-section">
-                  <div class="avatar-big">SL</div>
+                  <div class="avatar-big">АИ</div>
                   <div class="avatar-info">
-                    <div class="avatar-name">Sarah Lin</div>
-                    <div class="avatar-email">sarah@neuralco.ai</div>
-                    <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="showToast('Avatar updated!','success')">Change avatar</button>
+                    <div class="avatar-name">Администратор</div>
+                    <div class="avatar-email">admin@neuralco.ai</div>
+                    <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="showToast('Аватар обновлён!','success')">Изменить аватар</button>
                   </div>
                 </div>
               </div>
               <div class="settings-section">
                 <div class="settings-section-hdr">
-                  <div class="settings-section-title">Personal information</div>
-                  <div class="settings-section-sub">Update your name and email</div>
+                  <div class="settings-section-title">Личные данные</div>
+                  <div class="settings-section-sub">Обновите имя и email</div>
                 </div>
                 <div class="settings-row">
-                  <div><div class="settings-label">Full name</div></div>
-                  <input class="settings-input" value="Sarah Lin">
+                  <div><div class="settings-label">Полное имя</div></div>
+                  <input class="settings-input" value="Администратор">
                 </div>
                 <div class="settings-row">
-                  <div><div class="settings-label">Email address</div></div>
-                  <input class="settings-input" value="sarah@neuralco.ai">
+                  <div><div class="settings-label">Email адрес</div></div>
+                  <input class="settings-input" value="admin@neuralco.ai">
                 </div>
                 <div class="settings-row">
-                  <div><div class="settings-label">Role / title</div></div>
-                  <input class="settings-input" value="Head of Product">
+                  <div><div class="settings-label">Роль / должность</div></div>
+                  <input class="settings-input" value="Руководитель продукта">
                 </div>
                 <div class="settings-row" style="justify-content:flex-end;border-bottom:none">
-                  <button class="btn btn-primary" onclick="showToast('Profile saved successfully!','success')">Save changes</button>
+                  <button class="btn btn-primary" onclick="showToast('Профиль сохранён!','success')">Сохранить изменения</button>
                 </div>
               </div>
               <div class="settings-section">
                 <div class="settings-section-hdr">
-                  <div class="settings-section-title">Danger zone</div>
+                  <div class="settings-section-title">Опасная зона</div>
                 </div>
                 <div class="settings-row">
-                  <div><div class="settings-label">Delete account</div><div class="settings-desc">Permanently delete your account and all data</div></div>
-                  <button class="btn btn-danger" onclick="showToast('Please contact support to delete your account','error')">Delete account</button>
+                  <div><div class="settings-label">Удалить аккаунт</div><div class="settings-desc">Удаление аккаунта и всех данных без возможности восстановления</div></div>
+                  <button class="btn btn-danger" onclick="showToast('Для удаления аккаунта обратитесь в поддержку','error')">Удалить аккаунт</button>
                 </div>
               </div>
             </div>
-            <!-- Team tab (hidden) -->
+            <!-- API Ключ -->
+            <div id="settings-api" style="display:none">
+              <div class="settings-section">
+                <div class="settings-section-hdr">
+                  <div class="settings-section-title">🔑 API ключ Anthropic</div>
+                  <div class="settings-section-sub">Ключ используется для реальных ответов Claude AI в чате</div>
+                </div>
+                <div class="settings-row">
+                  <div>
+                    <div class="settings-label">Текущий ключ</div>
+                    <div class="settings-desc">Получите ключ на <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent2)">console.anthropic.com</a></div>
+                  </div>
+                  <div class="apikey-wrap">
+                    <input class="settings-input" id="api-key-input" type="password" placeholder="sk-ant-..." style="width:280px" oninput="updateApiKey(this.value)">
+                    <button class="btn btn-primary btn-sm" onclick="saveApiKey()">Сохранить</button>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div>
+                    <div class="settings-label">Статус подключения</div>
+                  </div>
+                  <div id="api-connection-status" style="font-size:13px;color:var(--text3)">⬤ Не настроен</div>
+                </div>
+              </div>
+            </div>
+            <!-- Команда -->
             <div id="settings-team" style="display:none">
               <div class="settings-section">
                 <div class="billing-section-hdr">
-                  <div class="billing-section-title">Team members (4 / 25)</div>
-                  <button class="btn btn-primary btn-sm" onclick="showToast('Invitation sent!','success')">+ Invite member</button>
+                  <div class="billing-section-title">Участники команды (4 / 25)</div>
+                  <button class="btn btn-primary btn-sm" onclick="showToast('Приглашение отправлено!','success')">+ Пригласить</button>
                 </div>
                 <div class="member-row">
-                  <div class="member-avatar" style="background:linear-gradient(135deg,var(--accent),var(--cyan))">SL</div>
-                  <div><div class="member-name">Sarah Lin</div><div class="member-email">sarah@neuralco.ai</div></div>
-                  <span class="role-badge owner">Owner</span>
+                  <div class="member-avatar" style="background:linear-gradient(135deg,var(--accent),var(--cyan))">АИ</div>
+                  <div><div class="member-name">Администратор</div><div class="member-email">admin@neuralco.ai</div></div>
+                  <span class="role-badge owner">Владелец</span>
                 </div>
                 <div class="member-row">
-                  <div class="member-avatar" style="background:linear-gradient(135deg,var(--green),#4ade80)">AC</div>
-                  <div><div class="member-name">Alex Chen</div><div class="member-email">alex@neuralco.ai</div></div>
-                  <span class="role-badge">Admin</span>
+                  <div class="member-avatar" style="background:linear-gradient(135deg,var(--green),#4ade80)">АЧ</div>
+                  <div><div class="member-name">Алексей Чен</div><div class="member-email">alex@neuralco.ai</div></div>
+                  <span class="role-badge">Администратор</span>
                 </div>
                 <div class="member-row">
-                  <div class="member-avatar" style="background:linear-gradient(135deg,var(--amber),#fcd34d)">MK</div>
-                  <div><div class="member-name">Maya Kim</div><div class="member-email">maya@neuralco.ai</div></div>
-                  <span class="role-badge">Member</span>
+                  <div class="member-avatar" style="background:linear-gradient(135deg,var(--amber),#fcd34d)">МК</div>
+                  <div><div class="member-name">Майя Кимова</div><div class="member-email">maya@neuralco.ai</div></div>
+                  <span class="role-badge">Участник</span>
                 </div>
                 <div class="member-row">
-                  <div class="member-avatar" style="background:linear-gradient(135deg,var(--red),#fb7185)">JP</div>
-                  <div><div class="member-name">James Park</div><div class="member-email">james@neuralco.ai</div></div>
-                  <span class="role-badge">Member</span>
+                  <div class="member-avatar" style="background:linear-gradient(135deg,var(--red),#fb7185)">ЖП</div>
+                  <div><div class="member-name">Жаслан Парков</div><div class="member-email">james@neuralco.ai</div></div>
+                  <span class="role-badge">Участник</span>
                 </div>
               </div>
             </div>
-            <!-- Notifications tab -->
+            <!-- Уведомления -->
             <div id="settings-notifications" style="display:none">
               <div class="settings-section">
                 <div class="settings-section-hdr">
-                  <div class="settings-section-title">Notification preferences</div>
+                  <div class="settings-section-title">Настройки уведомлений</div>
                 </div>
                 <div class="settings-row">
-                  <div><div class="settings-label">AI analysis complete</div><div class="settings-desc">Notify when AI finishes analyzing a file</div></div>
-                  <label class="toggle"><input type="checkbox" checked onchange="showToast('Preference saved','success')"><span class="toggle-slider"></span></label>
+                  <div><div class="settings-label">AI анализ завершён</div><div class="settings-desc">Уведомление, когда AI закончит анализ файла</div></div>
+                  <label class="toggle"><input type="checkbox" checked onchange="showToast('Настройка сохранена','success')"><span class="toggle-slider"></span></label>
                 </div>
                 <div class="settings-row">
-                  <div><div class="settings-label">Payment alerts</div><div class="settings-desc">Invoices, failed payments, upgrades</div></div>
-                  <label class="toggle"><input type="checkbox" checked onchange="showToast('Preference saved','success')"><span class="toggle-slider"></span></label>
+                  <div><div class="settings-label">Уведомления об оплате</div><div class="settings-desc">Счета, неудачные платежи, апгрейды</div></div>
+                  <label class="toggle"><input type="checkbox" checked onchange="showToast('Настройка сохранена','success')"><span class="toggle-slider"></span></label>
                 </div>
                 <div class="settings-row">
-                  <div><div class="settings-label">Team activity</div><div class="settings-desc">New members, role changes</div></div>
-                  <label class="toggle"><input type="checkbox" onchange="showToast('Preference saved','success')"><span class="toggle-slider"></span></label>
+                  <div><div class="settings-label">Активность команды</div><div class="settings-desc">Новые участники, изменения ролей</div></div>
+                  <label class="toggle"><input type="checkbox" onchange="showToast('Настройка сохранена','success')"><span class="toggle-slider"></span></label>
                 </div>
                 <div class="settings-row">
-                  <div><div class="settings-label">API usage warnings</div><div class="settings-desc">Alert at 80% and 95% of limits</div></div>
-                  <label class="toggle"><input type="checkbox" checked onchange="showToast('Preference saved','success')"><span class="toggle-slider"></span></label>
-                </div>
-                <div class="settings-row">
-                  <div><div class="settings-label">Product updates</div><div class="settings-desc">New features and changelog</div></div>
-                  <label class="toggle"><input type="checkbox" onchange="showToast('Preference saved','success')"><span class="toggle-slider"></span></label>
+                  <div><div class="settings-label">Предупреждения API</div><div class="settings-desc">Оповещение при 80% и 95% использования лимита</div></div>
+                  <label class="toggle"><input type="checkbox" checked onchange="showToast('Настройка сохранена','success')"><span class="toggle-slider"></span></label>
                 </div>
               </div>
             </div>
-            <!-- API Keys tab -->
-            <div id="settings-api" style="display:none">
-              <div class="settings-section">
-                <div class="billing-section-hdr">
-                  <div class="billing-section-title">API Keys</div>
-                  <button class="btn btn-primary btn-sm" onclick="showToast('New API key created! Copy it now — it won\'t be shown again.','success')">+ Create key</button>
-                </div>
-                <div class="settings-row">
-                  <div><div class="settings-label">Production key</div><div class="settings-desc">Created May 1, 2026 · Last used 2 min ago</div></div>
-                  <div class="apikey-wrap">
-                    <div class="apikey-input">nrl_prod_•••••••••••••••••••••••aK72</div>
-                    <button class="btn btn-ghost btn-sm" onclick="showToast('Copied to clipboard!','success')">Copy</button>
-                    <button class="btn btn-danger btn-sm" onclick="showToast('Key revoked','error')">Revoke</button>
-                  </div>
-                </div>
-                <div class="settings-row">
-                  <div><div class="settings-label">Development key</div><div class="settings-desc">Created Apr 12, 2026 · Last used 3 days ago</div></div>
-                  <div class="apikey-wrap">
-                    <div class="apikey-input">nrl_dev_•••••••••••••••••••••••mN31</div>
-                    <button class="btn btn-ghost btn-sm" onclick="showToast('Copied!','success')">Copy</button>
-                    <button class="btn btn-danger btn-sm" onclick="showToast('Key revoked','error')">Revoke</button>
-                  </div>
-                </div>
-              </div>
-              <div class="settings-section">
-                <div class="settings-section-hdr">
-                  <div class="settings-section-title">Webhooks</div>
-                  <div class="settings-section-sub">Receive real-time event notifications via HTTP POST</div>
-                </div>
-                <div class="settings-row">
-                  <div><div class="settings-label">Endpoint URL</div></div>
-                  <input class="settings-input" value="https://neuralco.ai/webhooks/neural">
-                </div>
-                <div class="settings-row">
-                  <div><div class="settings-label">Events</div></div>
-                  <div style="font-size:12px;color:var(--text2)">ai.complete · payment.success · user.joined</div>
-                </div>
-                <div class="settings-row" style="justify-content:flex-end;border-bottom:none">
-                  <button class="btn btn-ghost btn-sm" onclick="showToast('Test event sent!','success')">Test webhook</button>
-                  <button class="btn btn-primary" onclick="showToast('Webhook saved!','success')">Save</button>
-                </div>
-              </div>
-            </div>
-            <!-- Appearance tab -->
+            <!-- Внешний вид -->
             <div id="settings-appearance" style="display:none">
               <div class="settings-section">
                 <div class="settings-section-hdr">
-                  <div class="settings-section-title">Appearance</div>
+                  <div class="settings-section-title">Внешний вид</div>
                 </div>
                 <div class="settings-row">
-                  <div><div class="settings-label">Theme</div><div class="settings-desc">Interface color scheme</div></div>
+                  <div><div class="settings-label">Тема</div><div class="settings-desc">Цветовая схема интерфейса</div></div>
                   <div style="display:flex;gap:8px">
-                    <button class="btn btn-ghost btn-sm" style="border-color:var(--accent);color:var(--accent2)" onclick="showToast('Dark mode active','info')">◑ Dark</button>
-                    <button class="btn btn-ghost btn-sm" onclick="showToast('Light mode coming soon!','info')">☀ Light</button>
-                    <button class="btn btn-ghost btn-sm" onclick="showToast('System mode active','info')">⊙ System</button>
+                    <button class="btn btn-ghost btn-sm" style="border-color:var(--accent);color:var(--accent2)">◑ Тёмная</button>
+                    <button class="btn btn-ghost btn-sm" onclick="showToast('Светлая тема скоро!','info')">☀ Светлая</button>
+                    <button class="btn btn-ghost btn-sm" onclick="showToast('Системная тема активна','info')">⊙ Системная</button>
                   </div>
                 </div>
                 <div class="settings-row">
-                  <div><div class="settings-label">Accent color</div></div>
+                  <div><div class="settings-label">Акцентный цвет</div></div>
                   <div style="display:flex;gap:8px;align-items:center">
-                    <div style="width:22px;height:22px;border-radius:50%;background:#7c6bff;cursor:pointer;border:2px solid #fff" onclick="showToast('Accent: Purple','info')"></div>
-                    <div style="width:22px;height:22px;border-radius:50%;background:#06b6d4;cursor:pointer" onclick="showToast('Accent: Cyan','info')"></div>
-                    <div style="width:22px;height:22px;border-radius:50%;background:#22c55e;cursor:pointer" onclick="showToast('Accent: Green','info')"></div>
-                    <div style="width:22px;height:22px;border-radius:50%;background:#f59e0b;cursor:pointer" onclick="showToast('Accent: Amber','info')"></div>
-                    <div style="width:22px;height:22px;border-radius:50%;background:#f43f5e;cursor:pointer" onclick="showToast('Accent: Rose','info')"></div>
+                    <div style="width:22px;height:22px;border-radius:50%;background:#7c6bff;cursor:pointer;border:2px solid #fff" onclick="showToast('Акцент: Фиолетовый','info')"></div>
+                    <div style="width:22px;height:22px;border-radius:50%;background:#06b6d4;cursor:pointer" onclick="showToast('Акцент: Голубой','info')"></div>
+                    <div style="width:22px;height:22px;border-radius:50%;background:#22c55e;cursor:pointer" onclick="showToast('Акцент: Зелёный','info')"></div>
+                    <div style="width:22px;height:22px;border-radius:50%;background:#f59e0b;cursor:pointer" onclick="showToast('Акцент: Янтарный','info')"></div>
+                    <div style="width:22px;height:22px;border-radius:50%;background:#f43f5e;cursor:pointer" onclick="showToast('Акцент: Розовый','info')"></div>
                   </div>
-                </div>
-                <div class="settings-row">
-                  <div><div class="settings-label">Compact mode</div><div class="settings-desc">Reduce spacing for higher information density</div></div>
-                  <label class="toggle"><input type="checkbox" onchange="showToast('Preference saved','success')"><span class="toggle-slider"></span></label>
                 </div>
               </div>
             </div>
@@ -1165,136 +1076,154 @@ Could you share your current roadmap or the specific features you're evaluating?
   </div>
 </div>
 
-<!-- COMMAND PALETTE -->
+<!-- ПАНЕЛЬ КОМАНД -->
 <div class="cmd-overlay" id="cmd-overlay" onclick="closeCmd(event)">
   <div class="cmd-modal">
     <div class="cmd-input-wrap">
       <span class="cmd-icon">⌕</span>
-      <input class="cmd-input" id="cmd-input" placeholder="Search pages, actions, settings…" oninput="filterCmd(this.value)" onkeydown="cmdKey(event)" autofocus>
+      <input class="cmd-input" id="cmd-input" placeholder="Поиск страниц, действий, настроек…" oninput="filterCmd(this.value)" onkeydown="cmdKey(event)" autofocus>
     </div>
     <div class="cmd-results" id="cmd-results"></div>
   </div>
 </div>
 
-<!-- TOAST CONTAINER -->
+<!-- УВЕДОМЛЕНИЯ -->
 <div class="toast-wrap" id="toast-wrap"></div>
 
-<!-- HIDDEN FILE INPUT -->
+<!-- СКРЫТЫЙ ИНПУТ ФАЙЛОВ -->
 <input type="file" id="file-input" style="display:none" multiple onchange="handleFileSelect(this)">
 
 <script>
-// ── STATE ──
+// ── СОСТОЯНИЕ ──
 const state = {
   page: 'dashboard',
   settingsTab: 'profile',
   chatHistory: [],
   isTyping: false,
   rtInterval: null,
+  apiKey: localStorage.getItem('neuralос_api_key') || '',
+  totalTokens: 0,
 };
 
-// ── AUTH ──
+// ── ВХОД ──
 function quickLogin() {
+  const keyInput = document.getElementById('login-api-key');
+  if (keyInput && keyInput.value.trim()) {
+    state.apiKey = keyInput.value.trim();
+    localStorage.setItem('neuralос_api_key', state.apiKey);
+  }
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
   initCharts();
   startRealtime();
-  showToast('Welcome back, Sarah! ✦', 'success');
-  setTimeout(() => showToast('3 new AI conversations ready', 'info'), 1200);
+  updateApiStatus();
+  // Восстанавливаем ключ в настройках
+  const apiKeyInput = document.getElementById('api-key-input');
+  if (apiKeyInput && state.apiKey) apiKeyInput.value = state.apiKey;
+  showToast('Добро пожаловать в NeuralOS! ✦', 'success');
+  setTimeout(() => showToast('3 новых AI беседы готовы', 'info'), 1200);
 }
 
-// ── NAVIGATION ──
+function updateApiStatus() {
+  const statusEl = document.getElementById('api-status');
+  const connStatusEl = document.getElementById('api-connection-status');
+  const badgeEl = document.getElementById('model-badge');
+  if (state.apiKey && state.apiKey.startsWith('sk-ant-')) {
+    if (statusEl) statusEl.textContent = '● Подключено';
+    if (statusEl) statusEl.style.color = 'var(--green)';
+    if (connStatusEl) { connStatusEl.textContent = '⬤ Подключено к Claude API'; connStatusEl.style.color = 'var(--green)'; }
+    if (badgeEl) badgeEl.textContent = '✦ Claude Sonnet';
+  } else if (state.apiKey) {
+    if (statusEl) statusEl.textContent = '● Неверный ключ';
+    if (statusEl) statusEl.style.color = 'var(--red)';
+    if (connStatusEl) { connStatusEl.textContent = '⬤ Неверный ключ (должен начинаться с sk-ant-)'; connStatusEl.style.color = 'var(--red)'; }
+  } else {
+    if (statusEl) statusEl.textContent = '● Демо-режим';
+    if (statusEl) statusEl.style.color = 'var(--text3)';
+    if (connStatusEl) { connStatusEl.textContent = '⬤ Демо-режим (без API ключа)'; connStatusEl.style.color = 'var(--text3)'; }
+  }
+}
+
+function updateApiKey(val) {
+  state.apiKey = val;
+}
+
+function saveApiKey() {
+  localStorage.setItem('neuralос_api_key', state.apiKey);
+  updateApiStatus();
+  showToast('API ключ сохранён!', 'success');
+}
+
+// ── НАВИГАЦИЯ ──
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
-  const navItems = document.querySelectorAll('.nav-item');
-  navItems.forEach(item => {
+  document.querySelectorAll('.nav-item').forEach(item => {
     if (item.getAttribute('onclick')?.includes(page)) item.classList.add('active');
   });
   state.page = page;
   closeCmd();
 }
 
-// ── SETTINGS TABS ──
+// ── ВКЛАДКИ НАСТРОЕК ──
 function switchSettingsTab(el, tab) {
   document.querySelectorAll('.settings-nav-item').forEach(i => i.classList.remove('active'));
   el.classList.add('active');
-  ['profile','team','notifications','api','appearance'].forEach(t => {
-    const el = document.getElementById('settings-' + t);
-    if (el) el.style.display = t === tab ? 'block' : 'none';
+  ['profile','api','team','notifications','appearance'].forEach(t => {
+    const el2 = document.getElementById('settings-' + t);
+    if (el2) el2.style.display = t === tab ? 'block' : 'none';
   });
 }
 
-// ── CHARTS ──
+// ── ГРАФИКИ ──
 function initCharts() {
-  const chartDefaults = {
-    color: '#a1a1ab',
-    borderColor: '#2a2a32',
-  };
-  Chart.defaults.color = chartDefaults.color;
-  Chart.defaults.borderColor = chartDefaults.borderColor;
-
-  // Revenue chart
+  Chart.defaults.color = '#a1a1ab';
+  Chart.defaults.borderColor = '#2a2a32';
   const revCtx = document.getElementById('revenueChart').getContext('2d');
-  const labels = ['Apr 17','Apr 20','Apr 23','Apr 26','Apr 29','May 2','May 5','May 8','May 11','May 14','May 17'];
   new Chart(revCtx, {
     type: 'line',
     data: {
-      labels,
+      labels: ['17 апр','20 апр','23 апр','26 апр','29 апр','2 мая','5 мая','8 мая','11 мая','14 мая','17 мая'],
       datasets: [{
-        label: 'Revenue',
-        data: [32000,33500,31800,35200,36800,38100,37400,40200,42800,45100,48290],
+        label: 'Выручка',
+        data: [14400000,15075000,14310000,15840000,16560000,17145000,16830000,18090000,19260000,20295000,21730500],
         borderColor: '#7c6bff',
         backgroundColor: 'rgba(124,107,255,0.06)',
-        borderWidth: 2,
-        fill: true,
-        tension: 0.4,
-        pointRadius: 0,
-        pointHoverRadius: 4,
+        borderWidth: 2, fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 4,
         pointHoverBackgroundColor: '#7c6bff',
       }]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: true,
+      responsive: true, maintainAspectRatio: true,
       plugins: { legend: { display: false }, tooltip: {
-        backgroundColor: '#18181b',
-        borderColor: '#2a2a32',
-        borderWidth: 1,
-        titleColor: '#f4f4f5',
-        bodyColor: '#a1a1ab',
-        callbacks: { label: ctx => ' $' + ctx.raw.toLocaleString() }
+        backgroundColor: '#18181b', borderColor: '#2a2a32', borderWidth: 1,
+        titleColor: '#f4f4f5', bodyColor: '#a1a1ab',
+        callbacks: { label: ctx => ' ₸' + ctx.raw.toLocaleString('ru-RU') }
       }},
       scales: {
         x: { grid: { display: false }, ticks: { maxTicksLimit: 6, font: { size: 11 } } },
-        y: { grid: { color: '#1e1e23' }, ticks: { font: { size: 11 }, callback: v => '$' + (v/1000).toFixed(0) + 'k' } }
+        y: { grid: { color: '#1e1e23' }, ticks: { font: { size: 11 }, callback: v => '₸' + (v/1000000).toFixed(1) + 'М' } }
       }
     }
   });
-
-  // Donut chart
   const planCtx = document.getElementById('planChart').getContext('2d');
   new Chart(planCtx, {
     type: 'doughnut',
     data: {
-      labels: ['Pro', 'Enterprise', 'Starter'],
+      labels: ['Pro', 'Enterprise', 'Стартер'],
       datasets: [{
         data: [58, 28, 14],
         backgroundColor: ['#7c6bff', '#06b6d4', '#27272e'],
-        borderColor: '#111113',
-        borderWidth: 3,
-        hoverOffset: 4,
+        borderColor: '#111113', borderWidth: 3, hoverOffset: 4,
       }]
     },
     options: {
-      responsive: true,
-      cutout: '72%',
+      responsive: true, cutout: '72%',
       plugins: {
         legend: { position: 'bottom', labels: { padding: 16, font: { size: 12 } } },
         tooltip: {
-          backgroundColor: '#18181b',
-          borderColor: '#2a2a32',
-          borderWidth: 1,
+          backgroundColor: '#18181b', borderColor: '#2a2a32', borderWidth: 1,
           callbacks: { label: ctx => ' ' + ctx.label + ': ' + ctx.raw + '%' }
         }
       }
@@ -1302,39 +1231,31 @@ function initCharts() {
   });
 }
 
-// ── REALTIME ──
+// ── РЕАЛТАЙМ ──
 function startRealtime() {
   state.rtInterval = setInterval(() => {
     const users = document.getElementById('rt-users');
     const calls = document.getElementById('rt-calls');
     const latency = document.getElementById('rt-latency');
-    if (users) users.textContent = (1200 + Math.floor(Math.random() * 100)).toLocaleString();
+    if (users) users.textContent = (1200 + Math.floor(Math.random() * 100)).toLocaleString('ru-RU');
     if (calls) calls.textContent = 70 + Math.floor(Math.random() * 40);
-    if (latency) latency.textContent = (130 + Math.floor(Math.random() * 30)) + 'ms';
+    if (latency) latency.textContent = (130 + Math.floor(Math.random() * 30)) + 'мс';
   }, 2500);
 }
 
-// ── CHAT ──
-const aiResponses = [
-  "That's a great question! Based on modern SaaS patterns, I'd recommend focusing on **activation rate** as your north star metric. Users who complete 3 key actions within the first 7 days have an 85% higher retention at 90 days.\n\nHere's a framework:\n```\nActivation = Action A + Action B + Action C ≤ 7 days\nTarget: ≥ 40% activation rate\nCurrent baseline: measure first\n```\nWould you like me to help define what those key actions should be for your product?",
-  "Looking at your data, I can see a few interesting patterns:\n\n1. **Peak usage** is between 9-11am PST — consider scheduling AI-heavy operations during off-peak hours to reduce costs\n2. **Pro plan users** generate 3.4x more API calls than Starter — strong signal they're getting value\n3. Your **churn concentration** is in months 3-4, which suggests an onboarding gap\n\nI'd focus your Q4 roadmap on the month-2 to month-4 experience specifically.",
-  "I can help you think through the architecture. For a scalable AI SaaS, I'd recommend:\n\n```typescript\n// Suggested stack\ninterface AIStack {\n  auth: 'Supabase' | 'Auth0';\n  ai: 'OpenAI' | 'Anthropic';\n  queue: 'Redis' | 'BullMQ';\n  cache: 'Redis';\n  storage: 'S3' | 'Supabase Storage';\n}\n```\n\nThe key is **async job processing** for long-running AI tasks. Never block the main thread with AI calls — queue them and stream results back via WebSocket.",
-  "Great insight! The data tells a clear story here. Your **Net Revenue Retention (NRR)** is the most important metric for a SaaS at your stage. If NRR > 100%, you grow even without acquiring new customers.\n\nTo calculate it:\n- Starting MRR: $42,100\n- Expansion: +$8,200\n- Churn: -$2,010\n- **NRR = 106.4%** — excellent!\n\nThis means your existing customers are growing, which is a very healthy signal for investors.",
-];
-let aiResponseIdx = 0;
-
-function sendMessage() {
+// ── ЧАТ С CLAUDE API ──
+async function sendMessage() {
   const input = document.getElementById('chat-input');
   const msg = input.value.trim();
   if (!msg || state.isTyping) return;
   input.value = '';
   autoResize(input);
-
   appendMessage('user', msg);
+  state.chatHistory.push({ role: 'user', content: msg });
   state.isTyping = true;
   document.getElementById('send-btn').disabled = true;
 
-  // Show typing indicator
+  // Показываем индикатор печати
   const typingEl = document.createElement('div');
   typingEl.className = 'msg-group';
   typingEl.id = 'typing-msg';
@@ -1342,15 +1263,120 @@ function sendMessage() {
   document.getElementById('chat-messages').appendChild(typingEl);
   scrollChat();
 
-  const delay = 1200 + Math.random() * 1000;
-  setTimeout(() => {
-    typingEl.remove();
-    const response = aiResponses[aiResponseIdx % aiResponses.length];
-    aiResponseIdx++;
-    appendMessage('ai', response);
-    state.isTyping = false;
-    document.getElementById('send-btn').disabled = false;
-  }, delay);
+  // Если есть ключ — реальный API
+  if (state.apiKey && state.apiKey.startsWith('sk-ant-')) {
+    try {
+      typingEl.remove();
+      const aiGroup = createAiMessageGroup();
+      document.getElementById('chat-messages').appendChild(aiGroup);
+      scrollChat();
+      const bubble = aiGroup.querySelector('.msg-bubble');
+      const cursor = document.createElement('span');
+      cursor.className = 'streaming-cursor';
+      bubble.appendChild(cursor);
+
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': state.apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1024,
+          system: 'Ты — NeuralOS AI-ассистент, умный помощник для SaaS-платформы. Отвечай чётко и по делу. Используй markdown-форматирование (**жирный**, `код`, ```блок кода```) когда уместно. Общайся на русском языке, если пользователь пишет на русском.',
+          messages: state.chatHistory,
+        }),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        cursor.remove();
+        bubble.innerHTML = `<span style="color:var(--red)">Ошибка API: ${err.error?.message || response.status}. Проверьте API ключ в Настройках → API Ключ.</span>`;
+        state.chatHistory.pop();
+        state.isTyping = false;
+        document.getElementById('send-btn').disabled = false;
+        return;
+      }
+
+      const data = await response.json();
+      const text = data.content?.[0]?.text || '';
+      const tokens = (data.usage?.input_tokens || 0) + (data.usage?.output_tokens || 0);
+      state.totalTokens += tokens;
+
+      // Симуляция стриминга
+      cursor.remove();
+      bubble.innerHTML = '';
+      let i = 0;
+      const streamInterval = setInterval(() => {
+        i += Math.floor(Math.random() * 8) + 4;
+        if (i >= text.length) { i = text.length; clearInterval(streamInterval); }
+        bubble.innerHTML = formatText(text.slice(0, i));
+        if (i < text.length) bubble.innerHTML += '<span class="streaming-cursor"></span>';
+        scrollChat();
+      }, 20);
+
+      const metaEl = aiGroup.querySelector('.msg-meta');
+      if (metaEl) metaEl.textContent = `NeuralOS AI · Только что · ${tokens} токенов`;
+      state.chatHistory.push({ role: 'assistant', content: text });
+      updateTokenCounter();
+
+    } catch (e) {
+      typingEl?.remove?.();
+      showToast('Ошибка соединения с API: ' + e.message, 'error');
+      state.chatHistory.pop();
+    }
+  } else {
+    // Демо-режим
+    const demos = [
+      'Отличный вопрос! Основываясь на современных SaaS-паттернах, рекомендую сосредоточиться на **показателе активации** как на ключевой метрике. Пользователи, которые выполнили 3 ключевых действия в первые 7 дней, показывают на 85% более высокое удержание через 90 дней.\n\nФреймворк:\n```\nАктивация = Действие A + B + C ≤ 7 дней\nЦель: ≥ 40% показатель активации\n```\nХотите помочь определить ключевые действия для вашего продукта?',
+      'Глядя на ваши данные, вижу несколько интересных паттернов:\n\n1. **Пик использования** — 9-11 утра по МСК\n2. **Pro-пользователи** генерируют в 3.4 раза больше API-вызовов\n3. **Отток концентрируется** на 3-4 месяце — это сигнал о пробеле в онбординге\n\nСосредоточьте роадмап Q4 на опыте между 2 и 4 месяцами.',
+      'Рекомендую такую архитектуру:\n\n```typescript\ninterface AIStack {\n  auth: "Supabase";\n  ai: "Anthropic Claude";\n  queue: "BullMQ";\n  cache: "Redis";\n}\n```\n\nКлюч — **асинхронная обработка задач** для длительных AI-операций. Никогда не блокируйте основной поток AI-вызовами — ставьте их в очередь и передавайте результаты через WebSocket.',
+    ];
+    let idx = 0;
+    const delay = 1200 + Math.random() * 800;
+    setTimeout(() => {
+      typingEl.remove();
+      const response = demos[idx % demos.length]; idx++;
+      appendMessage('ai', response);
+      state.chatHistory.push({ role: 'assistant', content: response });
+      state.isTyping = false;
+      document.getElementById('send-btn').disabled = false;
+    }, delay);
+    return;
+  }
+
+  state.isTyping = false;
+  document.getElementById('send-btn').disabled = false;
+}
+
+function createAiMessageGroup() {
+  const group = document.createElement('div');
+  group.className = 'msg-group';
+  group.innerHTML = `
+    <div class="msg">
+      <div class="msg-avatar ai">N</div>
+      <div>
+        <div class="msg-bubble"></div>
+        <div class="msg-meta">NeuralOS AI · Только что</div>
+      </div>
+    </div>`;
+  return group;
+}
+
+function formatText(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/```(\w*)\n?([\s\S]+?)```/g, '<pre>$2</pre>')
+    .replace(/\n/g, '<br>');
+}
+
+function updateTokenCounter() {
+  const el = document.getElementById('token-counter');
+  if (el) el.textContent = `${state.totalTokens.toLocaleString('ru-RU')} токенов использовано`;
 }
 
 function appendMessage(role, text) {
@@ -1358,17 +1384,12 @@ function appendMessage(role, text) {
   const group = document.createElement('div');
   group.className = 'msg-group';
   const isAI = role === 'ai';
-  const processedText = text
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/```(\w*)\n?([\s\S]+?)```/g, '<pre>$2</pre>')
-    .replace(/\n/g, '<br>');
   group.innerHTML = `
     <div class="msg ${isAI ? '' : 'user'}">
-      <div class="msg-avatar ${isAI ? 'ai' : 'user'}">${isAI ? 'N' : 'SL'}</div>
+      <div class="msg-avatar ${isAI ? 'ai' : 'user'}">${isAI ? 'N' : 'АИ'}</div>
       <div>
-        <div class="msg-bubble">${processedText}</div>
-        <div class="msg-meta">${isAI ? 'NeuralOS AI' : 'Sarah'} · Just now${isAI ? ' · ' + (Math.floor(Math.random()*400)+100) + ' tokens' : ''}</div>
+        <div class="msg-bubble">${formatText(text)}</div>
+        <div class="msg-meta">${isAI ? 'NeuralOS AI' : 'Вы'} · Только что${isAI ? ' · демо' : ''}</div>
       </div>
     </div>`;
   container.appendChild(group);
@@ -1390,91 +1411,83 @@ function autoResize(el) {
 }
 
 function newChat() {
+  state.chatHistory = [];
+  state.totalTokens = 0;
+  updateTokenCounter();
   const list = document.getElementById('session-list');
   const newSession = document.createElement('div');
   newSession.className = 'session-item active';
-  newSession.innerHTML = `<div class="session-name">New conversation</div><div class="session-preview">Start typing…</div><div class="session-time">Just now</div>`;
+  newSession.innerHTML = `<div class="session-name">Новая беседа</div><div class="session-preview">Начните писать…</div><div class="session-time">Только что</div>`;
   list.querySelectorAll('.session-item').forEach(i => i.classList.remove('active'));
   list.prepend(newSession);
-  document.getElementById('chat-messages').innerHTML = `<div class="msg-group"><div class="msg"><div class="msg-avatar ai">N</div><div><div class="msg-bubble">Hello! I'm NeuralOS. What can I help you with today?</div><div class="msg-meta">NeuralOS AI · Just now</div></div></div></div>`;
+  document.getElementById('chat-messages').innerHTML = `<div class="msg-group"><div class="msg"><div class="msg-avatar ai">N</div><div><div class="msg-bubble">Привет! Я NeuralOS. Чем могу помочь?</div><div class="msg-meta">NeuralOS AI · Только что</div></div></div></div>`;
   document.getElementById('chat-input').focus();
-  showToast('New conversation started', 'info');
+  showToast('Новая беседа начата', 'info');
 }
 
-// ── FILES ──
-function triggerUpload() {
-  document.getElementById('file-input').click();
-}
-
+// ── ФАЙЛЫ ──
+function triggerUpload() { document.getElementById('file-input').click(); }
 function handleFileSelect(input) {
   if (input.files.length === 0) return;
   const file = input.files[0];
   const prog = document.getElementById('upload-progress');
   prog.querySelector('strong').textContent = file.name;
   prog.style.display = 'block';
-  showToast('Uploading ' + file.name + '…', 'info');
+  showToast('Загружаем ' + file.name + '…', 'info');
   setTimeout(() => {
     prog.style.display = 'none';
-    showToast(file.name + ' uploaded successfully!', 'success');
+    showToast(file.name + ' успешно загружен!', 'success');
   }, 3000);
 }
-
 function onDragOver(e) { e.preventDefault(); document.getElementById('upload-zone').classList.add('drag-over'); }
 function onDragLeave(e) { document.getElementById('upload-zone').classList.remove('drag-over'); }
 function onDrop(e) {
   e.preventDefault();
   document.getElementById('upload-zone').classList.remove('drag-over');
   const files = e.dataTransfer.files;
-  if (files.length) showToast('Uploading ' + files.length + ' file(s)…', 'info');
+  if (files.length) showToast('Загружаем ' + files.length + ' файл(ов)…', 'info');
 }
 
-// ── COMMAND PALETTE ──
+// ── ПАНЕЛЬ КОМАНД ──
 const cmdCommands = [
-  { icon: '⬡', label: 'Dashboard', color: 'var(--accent-glow)', action: () => showPage('dashboard'), shortcut: 'G D' },
-  { icon: '◈', label: 'AI Workspace', color: 'var(--accent-glow)', action: () => showPage('chat'), shortcut: 'G C' },
-  { icon: '◫', label: 'Files', color: 'var(--cyan-dim)', action: () => showPage('files'), shortcut: 'G F' },
-  { icon: '◎', label: 'Billing', color: 'var(--green-dim)', action: () => showPage('billing'), shortcut: 'G B' },
-  { icon: '◌', label: 'Settings', color: 'var(--bg4)', action: () => showPage('settings'), shortcut: 'G S' },
-  { icon: '+', label: 'New AI Chat', color: 'var(--accent-glow)', action: () => { showPage('chat'); newChat(); } },
-  { icon: '↑', label: 'Upload file', color: 'var(--cyan-dim)', action: () => { showPage('files'); triggerUpload(); } },
-  { icon: '←', label: 'Sign out', color: 'var(--red-dim)', action: logout },
+  { icon: '⬡', label: 'Дашборд', color: 'var(--accent-glow)', action: () => showPage('dashboard'), shortcut: 'G D' },
+  { icon: '◈', label: 'AI Рабочий стол', color: 'var(--accent-glow)', action: () => showPage('chat'), shortcut: 'G C' },
+  { icon: '◫', label: 'Файлы', color: 'var(--cyan-dim)', action: () => showPage('files'), shortcut: 'G F' },
+  { icon: '◎', label: 'Тарифы', color: 'var(--green-dim)', action: () => showPage('billing'), shortcut: 'G B' },
+  { icon: '◌', label: 'Настройки', color: 'var(--bg4)', action: () => showPage('settings'), shortcut: 'G S' },
+  { icon: '+', label: 'Новый AI Чат', color: 'var(--accent-glow)', action: () => { showPage('chat'); newChat(); } },
+  { icon: '↑', label: 'Загрузить файл', color: 'var(--cyan-dim)', action: () => { showPage('files'); triggerUpload(); } },
+  { icon: '←', label: 'Выйти', color: 'var(--red-dim)', action: logout },
 ];
-
 let cmdSelected = 0;
-
 function openCmd() {
   document.getElementById('cmd-overlay').classList.add('open');
   setTimeout(() => document.getElementById('cmd-input').focus(), 50);
   renderCmdResults('');
 }
-
 function closeCmd(e) {
   if (!e || e.target === document.getElementById('cmd-overlay')) {
     document.getElementById('cmd-overlay').classList.remove('open');
     document.getElementById('cmd-input').value = '';
   }
 }
-
 function filterCmd(q) { renderCmdResults(q); }
-
 function renderCmdResults(q) {
   const filtered = cmdCommands.filter(c => c.label.toLowerCase().includes(q.toLowerCase()));
   const html = filtered.map((c, i) => `
-    <div class="cmd-result${i === 0 ? ' selected' : ''}" onclick="${c.action.toString().includes('logout') ? 'logout()' : 'cmdGo(' + i + ')'}" data-idx="${i}">
+    <div class="cmd-result${i === 0 ? ' selected' : ''}" onclick="cmdGo(${i})" data-idx="${i}">
       <div class="cmd-result-icon" style="background:${c.color}">${c.icon}</div>
       <div class="cmd-result-text">${c.label}</div>
       ${c.shortcut ? `<span class="cmd-shortcut">${c.shortcut}</span>` : ''}
     </div>`).join('');
-  document.getElementById('cmd-results').innerHTML = html || '<div style="padding:16px;text-align:center;color:var(--text3);font-size:13px">No results found</div>';
+  document.getElementById('cmd-results').innerHTML = html || '<div style="padding:16px;text-align:center;color:var(--text3);font-size:13px">Ничего не найдено</div>';
   cmdSelected = 0;
 }
-
 function cmdGo(idx) {
   const q = document.getElementById('cmd-input').value;
   const filtered = cmdCommands.filter(c => c.label.toLowerCase().includes(q.toLowerCase()));
   if (filtered[idx]) { filtered[idx].action(); closeCmd({}); }
 }
-
 function cmdKey(e) {
   const results = document.querySelectorAll('.cmd-result');
   if (e.key === 'ArrowDown') { cmdSelected = Math.min(cmdSelected + 1, results.length - 1); }
@@ -1484,7 +1497,7 @@ function cmdKey(e) {
   results.forEach((r, i) => r.classList.toggle('selected', i === cmdSelected));
 }
 
-// ── TOAST ──
+// ── УВЕДОМЛЕНИЯ ──
 function showToast(msg, type = 'info') {
   const wrap = document.getElementById('toast-wrap');
   const toast = document.createElement('div');
@@ -1492,34 +1505,37 @@ function showToast(msg, type = 'info') {
   toast.className = `toast ${type}`;
   toast.innerHTML = `<span class="toast-icon">${icons[type] || '●'}</span><span class="toast-text">${msg}</span><button class="toast-close" onclick="this.parentElement.remove()">✕</button>`;
   wrap.appendChild(toast);
-  setTimeout(() => {
-    toast.classList.add('out');
-    setTimeout(() => toast.remove(), 200);
-  }, 3500);
+  setTimeout(() => { toast.classList.add('out'); setTimeout(() => toast.remove(), 200); }, 3500);
 }
 
-// ── LOGOUT ──
+// ── ВЫХОД ──
 function logout() {
   document.getElementById('app').style.display = 'none';
   document.getElementById('auth-screen').style.display = 'flex';
   if (state.rtInterval) clearInterval(state.rtInterval);
-  showToast('Signed out successfully', 'info');
+  showToast('Вы успешно вышли', 'info');
 }
 
-// ── KEYBOARD SHORTCUTS ──
+// ── КЛАВИШИ ──
 document.addEventListener('keydown', (e) => {
   if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openCmd(); }
   if (e.key === 'Escape') closeCmd({});
 });
 
-// ── PERIOD BUTTONS ──
+// ── КНОПКИ ПЕРИОДА ──
 document.querySelectorAll('.period-btn').forEach(btn => {
   btn.addEventListener('click', function() {
     this.closest('.chart-period').querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
     this.classList.add('active');
-    showToast('Chart updated: ' + this.textContent + ' view', 'info');
+    showToast('График обновлён: ' + this.textContent + ' вид', 'info');
   });
 });
+
+// Восстанавливаем ключ из localStorage при загрузке страницы
+if (state.apiKey) {
+  const apiKeyInput = document.getElementById('api-key-input');
+  if (apiKeyInput) apiKeyInput.value = state.apiKey;
+}
 </script>
 </body>
 </html>
