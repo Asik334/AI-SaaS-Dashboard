@@ -466,9 +466,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
       <input class="auth-input" type="password" placeholder="••••••••" value="••••••••">
     </div>
     <div class="auth-field">
-      <label class="auth-label">🔑 API-ключ Anthropic <span style="color:var(--text3);font-weight:400">(для работы чата)</span></label>
-      <div class="apikey-setup-note">Получите ключ на <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys. Без ключа чат работает в демо-режиме.</div>
-      <input class="auth-input" id="login-api-key" type="password" placeholder="sk-ant-..." autocomplete="off">
+      <label class="auth-label">🔑 API-ключ OpenAI <span style="color:var(--text3);font-weight:400">(для работы чата)</span></label>
+      <div class="apikey-setup-note">Получите ключ на <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a> → API Keys. Без ключа чат работает в демо-режиме.</div>
+      <input class="auth-input" id="login-api-key" type="password" placeholder="sk-..." autocomplete="off">
     </div>
     <button class="auth-btn" onclick="quickLogin()">Войти в NeuralOS →</button>
     <div class="auth-switch">Нет аккаунта? <a onclick="quickLogin()">Зарегистрируйтесь бесплатно</a></div>
@@ -748,7 +748,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:8px">
-                <div class="model-badge" id="model-badge">✦ Claude Sonnet</div>
+                <div class="model-badge" id="model-badge">✦ GPT-4o</div>
                 <div id="api-status" style="font-size:11px;color:var(--text3)"></div>
                 <button class="btn btn-ghost btn-sm">⋯</button>
               </div>
@@ -758,7 +758,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
                 <div class="msg">
                   <div class="msg-avatar ai">N</div>
                   <div>
-                    <div class="msg-bubble">Привет! Я ваш NeuralOS-ассистент на базе Claude AI. Могу помочь с анализом документов, написанием кода, ответами на вопросы и многим другим. Над чем будем работать сегодня?</div>
+                    <div class="msg-bubble">Привет! Я ваш NeuralOS-ассистент на базе GPT-4o. Могу помочь с анализом документов, написанием кода, ответами на вопросы и многим другим. Над чем будем работать сегодня?</div>
                     <div class="msg-meta">NeuralOS AI · Только что</div>
                   </div>
                 </div>
@@ -1036,16 +1036,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
             <div id="settings-api" style="display:none">
               <div class="settings-section">
                 <div class="settings-section-hdr">
-                  <div class="settings-section-title">🔑 API ключ Anthropic</div>
-                  <div class="settings-section-sub">Ключ используется для реальных ответов Claude AI в чате</div>
+                  <div class="settings-section-title">🔑 API ключ OpenAI</div>
+                  <div class="settings-section-sub">Ключ используется для реальных ответов GPT-4o в чате</div>
                 </div>
                 <div class="settings-row">
                   <div>
                     <div class="settings-label">Текущий ключ</div>
-                    <div class="settings-desc">Получите ключ на <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent2)">console.anthropic.com</a></div>
+                    <div class="settings-desc">Получите ключ на <a href="https://platform.openai.com/api-keys" target="_blank" style="color:var(--accent2)">platform.openai.com</a></div>
                   </div>
                   <div class="apikey-wrap">
-                    <input class="settings-input" id="api-key-input" type="password" placeholder="sk-ant-..." style="width:280px" oninput="updateApiKey(this.value)">
+                    <input class="settings-input" id="api-key-input" type="password" placeholder="sk-..." style="width:280px" oninput="updateApiKey(this.value)">
                     <button class="btn btn-primary btn-sm" onclick="saveApiKey()">Сохранить</button>
                   </div>
                 </div>
@@ -1169,7 +1169,7 @@ const state = {
   chatHistory: [],
   isTyping: false,
   rtInterval: null,
-  apiKey: localStorage.getItem('neuralос_api_key') || '',
+  apiKey: localStorage.getItem('neuralos_openai_key') || '',
   totalTokens: 0,
 };
 
@@ -1178,7 +1178,7 @@ function quickLogin() {
   const keyInput = document.getElementById('login-api-key');
   if (keyInput && keyInput.value.trim()) {
     state.apiKey = keyInput.value.trim();
-    localStorage.setItem('neuralос_api_key', state.apiKey);
+    localStorage.setItem('neuralos_openai_key', state.apiKey);
   }
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
@@ -1198,19 +1198,19 @@ function updateApiStatus() {
   const statusEl = document.getElementById('api-status');
   const connStatusEl = document.getElementById('api-connection-status');
   const badgeEl = document.getElementById('model-badge');
-  if (state.apiKey && state.apiKey.startsWith('sk-ant-')) {
+  if (state.apiKey && state.apiKey.startsWith('sk-')) {
     if (statusEl) statusEl.textContent = '● Подключено';
     if (statusEl) statusEl.style.color = 'var(--green)';
-    if (connStatusEl) { connStatusEl.textContent = '⬤ Подключено к Claude API'; connStatusEl.style.color = 'var(--green)'; }
-    if (badgeEl) badgeEl.textContent = '✦ Claude Sonnet';
+    if (connStatusEl) { connStatusEl.textContent = '⬤ Подключено к OpenAI API'; connStatusEl.style.color = 'var(--green)'; }
+    if (badgeEl) badgeEl.textContent = '✦ GPT-4o';
   } else if (state.apiKey) {
     if (statusEl) statusEl.textContent = '● Неверный ключ';
     if (statusEl) statusEl.style.color = 'var(--red)';
-    if (connStatusEl) { connStatusEl.textContent = '⬤ Неверный ключ (должен начинаться с sk-ant-)'; connStatusEl.style.color = 'var(--red)'; }
+    if (connStatusEl) { connStatusEl.textContent = '⬤ Неверный ключ (должен начинаться с sk-)'; connStatusEl.style.color = 'var(--red)'; }
   } else {
     if (statusEl) statusEl.textContent = '● Демо-режим';
     if (statusEl) statusEl.style.color = 'var(--text3)';
-    if (connStatusEl) { connStatusEl.textContent = '⬤ Демо-режим (без API ключа)'; connStatusEl.style.color = 'var(--text3)'; }
+    if (connStatusEl) { connStatusEl.textContent = '⬤ Демо-режим (без OpenAI ключа)'; connStatusEl.style.color = 'var(--text3)'; }
   }
 }
 
@@ -1219,7 +1219,7 @@ function updateApiKey(val) {
 }
 
 function saveApiKey() {
-  localStorage.setItem('neuralос_api_key', state.apiKey);
+  localStorage.setItem('neuralos_openai_key', state.apiKey);
   updateApiStatus();
   showToast('API ключ сохранён!', 'success');
 }
@@ -1343,7 +1343,7 @@ async function sendMessage() {
   scrollChat();
 
   // Если есть ключ — реальный API
-  if (state.apiKey && state.apiKey.startsWith('sk-ant-')) {
+  if (state.apiKey && state.apiKey.startsWith('sk-')) {
     try {
       typingEl.remove();
       const aiGroup = createAiMessageGroup();
@@ -1354,19 +1354,20 @@ async function sendMessage() {
       cursor.className = 'streaming-cursor';
       bubble.appendChild(cursor);
 
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const messages = [
+        { role: 'system', content: 'Ты — NeuralOS AI-ассистент, умный помощник для SaaS-платформы. Отвечай чётко и по делу. Используй markdown-форматирование (**жирный**, `код`, ```блок кода```) когда уместно. Общайся на русском языке, если пользователь пишет на русском.' },
+        ...state.chatHistory
+      ];
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': state.apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
+          'Authorization': 'Bearer ' + state.apiKey,
         },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
+          model: 'gpt-4o',
           max_tokens: 1024,
-          system: 'Ты — NeuralOS AI-ассистент, умный помощник для SaaS-платформы. Отвечай чётко и по делу. Используй markdown-форматирование (**жирный**, `код`, ```блок кода```) когда уместно. Общайся на русском языке, если пользователь пишет на русском.',
-          messages: state.chatHistory,
+          messages: messages,
         }),
       });
 
@@ -1381,8 +1382,8 @@ async function sendMessage() {
       }
 
       const data = await response.json();
-      const text = data.content?.[0]?.text || '';
-      const tokens = (data.usage?.input_tokens || 0) + (data.usage?.output_tokens || 0);
+      const text = data.choices?.[0]?.message?.content || '';
+      const tokens = (data.usage?.prompt_tokens || 0) + (data.usage?.completion_tokens || 0);
       state.totalTokens += tokens;
 
       // Симуляция стриминга
@@ -1398,7 +1399,7 @@ async function sendMessage() {
       }, 20);
 
       const metaEl = aiGroup.querySelector('.msg-meta');
-      if (metaEl) metaEl.textContent = `NeuralOS AI · Только что · ${tokens} токенов`;
+      if (metaEl) metaEl.textContent = `NeuralOS GPT-4o · Только что · ${tokens} токенов`;
       state.chatHistory.push({ role: 'assistant', content: text });
       updateTokenCounter();
 
@@ -1468,7 +1469,7 @@ function appendMessage(role, text) {
       <div class="msg-avatar ${isAI ? 'ai' : 'user'}">${isAI ? 'N' : 'АИ'}</div>
       <div>
         <div class="msg-bubble">${formatText(text)}</div>
-        <div class="msg-meta">${isAI ? 'NeuralOS AI' : 'Вы'} · Только что${isAI ? ' · демо' : ''}</div>
+        <div class="msg-meta">${isAI ? 'NeuralOS AI (GPT-4o)' : 'Вы'} · Только что${isAI ? ' · демо' : ''}</div>
       </div>
     </div>`;
   container.appendChild(group);
@@ -1499,7 +1500,7 @@ function newChat() {
   newSession.innerHTML = `<div class="session-name">Новая беседа</div><div class="session-preview">Начните писать…</div><div class="session-time">Только что</div>`;
   list.querySelectorAll('.session-item').forEach(i => i.classList.remove('active'));
   list.prepend(newSession);
-  document.getElementById('chat-messages').innerHTML = `<div class="msg-group"><div class="msg"><div class="msg-avatar ai">N</div><div><div class="msg-bubble">Привет! Я NeuralOS. Чем могу помочь?</div><div class="msg-meta">NeuralOS AI · Только что</div></div></div></div>`;
+  document.getElementById('chat-messages').innerHTML = `<div class="msg-group"><div class="msg"><div class="msg-avatar ai">N</div><div><div class="msg-bubble">Привет! Я NeuralOS на базе GPT-4o. Чем могу помочь?</div><div class="msg-meta">NeuralOS AI · Только что</div></div></div></div>`;
   document.getElementById('chat-input').focus();
   showToast('Новая беседа начата', 'info');
 }
@@ -1545,8 +1546,8 @@ const cmdCommands = [
   { icon: '!', label: 'Проверить API', sub: 'Тест соединения с Claude API', color: 'var(--cyan-dim)', cat: 'actions', action: () => { updateApiStatus(); showToast('API статус обновлён','info'); } },
   // AI
   { icon: '✦', label: 'Новый анализ', sub: 'AI анализ ваших данных', color: 'var(--accent-glow)', cat: 'ai', action: () => { showPage('chat'); newChat(); showToast('AI анализ готов','info'); } },
-  { icon: '◈', label: 'Claude Sonnet', sub: 'Активная модель', color: 'var(--accent-glow)', cat: 'ai', action: () => showToast('Используется Claude Sonnet','info') },
-  { icon: '◈', label: 'Claude Haiku', sub: 'Быстрая модель', color: 'var(--cyan-dim)', cat: 'ai', action: () => showToast('Переключено на Claude Haiku','info') },
+  { icon: '◈', label: 'GPT-4o', sub: 'Активная модель OpenAI', color: 'var(--accent-glow)', cat: 'ai', action: () => showToast('Используется GPT-4o','info') },
+  { icon: '◈', label: 'GPT-4o mini', sub: 'Быстрая модель OpenAI', color: 'var(--cyan-dim)', cat: 'ai', action: () => showToast('Переключено на GPT-4o mini','info') },
   // System
   { icon: '←', label: 'Выйти', sub: 'Завершить сессию', color: 'var(--red-dim)', cat: 'actions', action: logout },
 ];
@@ -1657,11 +1658,17 @@ function cmdKey(e) {
   if (results[cmdSelected]) results[cmdSelected].scrollIntoView({ block: 'nearest' });
 }
 
-// G+key shortcuts
+// ── GLOBAL KEYBOARD SHORTCUTS ──
 let gPressed = false, gTimeout;
 document.addEventListener('keydown', (e) => {
+  // ⌘K / Ctrl+K = open command palette
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openCmd(); return; }
+  // ESC closes palette
+  if (e.key === 'Escape') { closeCmd({}); return; }
+  // Skip shortcuts when in inputs or palette open
   if (document.getElementById('cmd-overlay').classList.contains('open')) return;
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  // G+key navigation
   if (e.key === 'g' || e.key === 'G') {
     gPressed = true;
     clearTimeout(gTimeout);
@@ -1670,10 +1677,7 @@ document.addEventListener('keydown', (e) => {
   }
   if (gPressed) {
     const map = { d:'dashboard', c:'chat', f:'files', b:'billing', s:'settings' };
-    if (map[e.key.toLowerCase()]) { showPage(map[e.key.toLowerCase()]); gPressed = false; return; }
-  }
-  if (e.key === 'n' && !e.metaKey && !e.ctrlKey) {
-    // n+c = new chat, n+f = new file
+    if (map[e.key.toLowerCase()]) { showPage(map[e.key.toLowerCase()]); gPressed = false; showToast('Переход: ' + map[e.key.toLowerCase()], 'info'); return; }
   }
 });
 
@@ -1696,11 +1700,7 @@ function logout() {
   showToast('Вы успешно вышли', 'info');
 }
 
-// ── КЛАВИШИ ──
-document.addEventListener('keydown', (e) => {
-  if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openCmd(); }
-  if (e.key === 'Escape') closeCmd({});
-});
+// keydown handled by gPressed block above
 
 // ── КНОПКИ ПЕРИОДА ──
 document.querySelectorAll('.period-btn').forEach(btn => {
