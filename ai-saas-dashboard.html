@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeuralOS — AI Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0b;
+  --bg1:#111113;
+  --bg2:#18181b;
+  --bg3:#1e1e23;
+  --bg4:#27272e;
+  --border:#2a2a32;
+  --border2:#363641;
+  --text:#f4f4f5;
+  --text2:#a1a1ab;
+  --text3:#6b6b78;
+  --accent:#7c6bff;
+  --accent2:#9b8bff;
+  --accent-glow:rgba(124,107,255,.18);
+  --green:#22c55e;
+  --green-dim:rgba(34,197,94,.12);
+  --red:#f43f5e;
+  --red-dim:rgba(244,63,94,.12);
+  --amber:#f59e0b;
+  --amber-dim:rgba(245,158,11,.12);
+  --cyan:#06b6d4;
+  --cyan-dim:rgba(6,182,212,.12);
+  --font:'DM Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+  --serif:'Playfair Display',serif;
+  --r:10px;
+  --r2:14px;
+  --sidebar:220px;
+  --hdr:56px;
+  --shadow:0 0 0 1px var(--border),0 4px 24px rgba(0,0,0,.4);
+}
+html{font-size:14px;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
+
+/* ── AUTH ── */
+#auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg);position:relative;overflow:hidden}
+.auth-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(124,107,255,.15),transparent),radial-gradient(ellipse 60% 40% at 100% 80%,rgba(6,182,212,.08),transparent);pointer-events:none}
+.auth-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:.3;pointer-events:none}
+.auth-card{position:relative;z-index:1;width:380px;background:var(--bg1);border:1px solid var(--border2);border-radius:20px;padding:36px;box-shadow:0 0 0 1px rgba(124,107,255,.1),0 32px 80px rgba(0,0,0,.6)}
+.auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.auth-logo-mark{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--cyan));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;font-family:var(--mono)}
+.auth-logo-name{font-size:18px;font-weight:600;letter-spacing:-.3px}
+.auth-logo-name span{color:var(--accent2)}
+.auth-title{font-size:22px;font-weight:600;letter-spacing:-.4px;margin-bottom:4px}
+.auth-sub{color:var(--text2);font-size:13px;margin-bottom:28px}
+.auth-social{display:flex;gap:10px;margin-bottom:20px}
+.auth-social-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);cursor:pointer;font-size:13px;color:var(--text2);transition:all .15s;font-family:var(--font)}
+.auth-social-btn:hover{background:var(--bg3);border-color:var(--border);color:var(--text)}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--text3);font-size:12px}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.auth-field{margin-bottom:14px}
+.auth-label{display:block;font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:500}
+.auth-input{width:100%;padding:10px 14px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;font-family:var(--font);outline:none;transition:all .15s}
+.auth-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.auth-input::placeholder{color:var(--text3)}
+.auth-btn{width:100%;padding:11px;background:var(--accent);border:none;border-radius:var(--r);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);margin-top:4px;transition:all .15s;letter-spacing:-.1px}
+.auth-btn:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(124,107,255,.3)}
+.auth-btn:active{transform:translateY(0)}
+.auth-switch{text-align:center;margin-top:20px;font-size:13px;color:var(--text2)}
+.auth-switch a{color:var(--accent2);cursor:pointer;text-decoration:none}
+.auth-terms{text-align:center;margin-top:12px;font-size:11px;color:var(--text3)}
+
+/* ── APP SHELL ── */
+#app{display:none;flex-direction:column;min-height:100vh}
+.app-inner{display:flex;flex:1;overflow:hidden;height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar);background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;overflow-x:hidden}
+.sidebar-logo{display:flex;align-items:center;gap:9px;padding:16px 16px 12px;border-bottom:1px solid var(--border)}
+.sidebar-logo-mark{width:28px;height:28px;background:linear-gradient(135deg,var(--accent),var(--cyan));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;font-family:var(--mono);flex-shrink:0}
+.sidebar-logo-name{font-size:14px;font-weight:600;letter-spacing:-.3px}
+.sidebar-logo-name span{color:var(--accent2)}
+.sidebar-section{padding:12px 10px 4px}
+.sidebar-section-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);padding:0 6px;margin-bottom:4px}
+.sidebar-nav{display:flex;flex-direction:column;gap:1px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:all .12s;white-space:nowrap;position:relative;border:1px solid transparent}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--accent-glow);color:var(--text);border-color:rgba(124,107,255,.2)}
+.nav-item.active .nav-icon{color:var(--accent2)}
+.nav-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:99px;min-width:18px;text-align:center}
+.nav-badge.green{background:var(--green)}
+.sidebar-user{margin-top:auto;padding:10px;border-top:1px solid var(--border)}
+.sidebar-user-inner{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:all .12s}
+.sidebar-user-inner:hover{background:var(--bg3)}
+.user-avatar{width:28px;height:28px;background:linear-gradient(135deg,var(--accent),var(--cyan));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.user-name{font-size:13px;font-weight:500;color:var(--text)}
+.user-plan{font-size:11px;color:var(--text3)}
+
+/* ── MAIN ── */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column;background:var(--bg)}
+.page{display:none;flex:1;flex-direction:column}
+.page.active{display:flex}
+
+/* ── PAGE HEADER ── */
+.page-hdr{display:flex;align-items:center;justify-content:space-between;padding:20px 28px 0;flex-shrink:0}
+.page-title{font-size:20px;font-weight:600;letter-spacing:-.4px}
+.page-sub{font-size:13px;color:var(--text2);margin-top:2px}
+.page-actions{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;border:1px solid transparent;font-family:var(--font);text-decoration:none}
+.btn-sm{padding:6px 10px;font-size:12px}
+.btn-primary{background:var(--accent);color:#fff;border:none}
+.btn-primary:hover{background:var(--accent2);box-shadow:0 4px 16px rgba(124,107,255,.3)}
+.btn-ghost{background:transparent;color:var(--text2);border-color:var(--border2)}
+.btn-ghost:hover{background:var(--bg3);color:var(--text)}
+.btn-danger{background:var(--red-dim);color:var(--red);border-color:rgba(244,63,94,.2)}
+.btn-danger:hover{background:rgba(244,63,94,.2)}
+
+/* ── DASHBOARD ── */
+.dash-body{padding:20px 28px 28px;flex:1;overflow-y:auto}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi-card{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r2);padding:18px;transition:border-color .15s;position:relative;overflow:hidden}
+.kpi-card:hover{border-color:var(--border2)}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:99px}
+.kpi-card.c-purple::before{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.kpi-card.c-green::before{background:linear-gradient(90deg,var(--green),#4ade80)}
+.kpi-card.c-cyan::before{background:linear-gradient(90deg,var(--cyan),#67e8f9)}
+.kpi-card.c-amber::before{background:linear-gradient(90deg,var(--amber),#fcd34d)}
+.kpi-label{font-size:12px;color:var(--text2);font-weight:500;margin-bottom:10px}
+.kpi-value{font-size:26px;font-weight:700;letter-spacing:-.8px;color:var(--text);line-height:1}
+.kpi-change{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px}
+.kpi-change.up{color:var(--green)}
+.kpi-change.down{color:var(--red)}
+.kpi-change.neutral{color:var(--text3)}
+.charts-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-bottom:20px}
+.chart-card{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
+.chart-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.chart-title{font-size:14px;font-weight:600;letter-spacing:-.2px}
+.chart-period{display:flex;gap:4px}
+.period-btn{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid transparent;background:transparent;color:var(--text3);font-family:var(--font);transition:all .12s}
+.period-btn.active{background:var(--bg3);border-color:var(--border2);color:var(--text)}
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.table-card{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+.table-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--border)}
+.table-title{font-size:14px;font-weight:600}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{padding:10px 18px;text-align:left;font-size:11px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);background:var(--bg)}
+.data-table td{padding:11px 18px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--bg2)}
+.status-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600}
+.status-pill::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.pill-green{background:var(--green-dim);color:var(--green)}
+.pill-amber{background:var(--amber-dim);color:var(--amber)}
+.pill-red{background:var(--red-dim);color:var(--red)}
+.pill-blue{background:var(--cyan-dim);color:var(--cyan)}
+.activity-feed{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:13px 18px;border-bottom:1px solid var(--border);transition:background .12s}
+.activity-item:last-child{border-bottom:none}
+.activity-item:hover{background:var(--bg2)}
+.act-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:1px}
+.act-icon.purple{background:var(--accent-glow);color:var(--accent2)}
+.act-icon.green{background:var(--green-dim);color:var(--green)}
+.act-icon.cyan{background:var(--cyan-dim);color:var(--cyan)}
+.act-icon.amber{background:var(--amber-dim);color:var(--amber)}
+.act-body{flex:1;min-width:0}
+.act-text{font-size:13px;color:var(--text);line-height:1.4}
+.act-text strong{font-weight:600}
+.act-time{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* ── REALTIME STATS BAR ── */
+.realtime-bar{display:flex;gap:14px;margin-bottom:20px}
+.rt-stat{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;display:flex;align-items:center;gap:10px;flex:1}
+.rt-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 0 3px var(--green-dim);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 3px var(--green-dim)}50%{box-shadow:0 0 0 6px rgba(34,197,94,.06)}}
+.rt-label{font-size:12px;color:var(--text2)}
+.rt-val{font-size:15px;font-weight:700;margin-top:1px}
+
+/* ── AI CHAT ── */
+.chat-layout{display:flex;flex:1;overflow:hidden;height:calc(100vh)}
+.chat-sessions{width:220px;background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.chat-sessions-hdr{padding:16px;border-bottom:1px solid var(--border)}
+.chat-sessions-title{font-size:13px;font-weight:600;margin-bottom:10px}
+.new-chat-btn{width:100%;padding:9px;background:var(--accent);border:none;border-radius:var(--r);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s}
+.new-chat-btn:hover{background:var(--accent2)}
+.session-list{flex:1;overflow-y:auto;padding:8px}
+.session-item{padding:9px 10px;border-radius:8px;cursor:pointer;transition:all .12s;margin-bottom:2px;border:1px solid transparent}
+.session-item:hover{background:var(--bg3)}
+.session-item.active{background:var(--accent-glow);border-color:rgba(124,107,255,.2)}
+.session-name{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.session-preview{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.session-time{font-size:10px;color:var(--text3);margin-top:3px}
+.chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.chat-hdr{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg1);flex-shrink:0}
+.chat-hdr-left{display:flex;align-items:center;gap:10px}
+.model-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:var(--accent-glow);border:1px solid rgba(124,107,255,.2);border-radius:99px;font-size:11px;font-weight:600;color:var(--accent2)}
+.chat-messages{flex:1;overflow-y:auto;padding:20px}
+.msg-group{margin-bottom:20px}
+.msg{display:flex;gap:12px;align-items:flex-start}
+.msg.user{flex-direction:row-reverse}
+.msg-avatar{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.msg-avatar.ai{background:linear-gradient(135deg,var(--accent),var(--cyan));color:#fff}
+.msg-avatar.user{background:var(--bg4);color:var(--text2);border:1px solid var(--border2)}
+.msg-bubble{max-width:72%;background:var(--bg1);border:1px solid var(--border);border-radius:var(--r2);padding:12px 16px;font-size:14px;line-height:1.65;color:var(--text)}
+.msg.user .msg-bubble{background:var(--accent);border-color:transparent;color:#fff;border-radius:var(--r2) var(--r2) 4px var(--r2)}
+.msg-meta{font-size:11px;color:var(--text3);margin-top:5px;display:flex;align-items:center;gap:6px}
+.msg.user .msg-meta{justify-content:flex-end}
+.msg-bubble code{font-family:var(--mono);background:rgba(255,255,255,.07);padding:1px 5px;border-radius:4px;font-size:12px}
+.msg-bubble pre{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin:10px 0;overflow-x:auto;font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--text2)}
+.typing-indicator{display:flex;align-items:center;gap:4px;padding:12px 16px;background:var(--bg1);border:1px solid var(--border);border-radius:var(--r2);width:fit-content}
+.typing-dot{width:6px;height:6px;background:var(--text3);border-radius:50%;animation:typing .9s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes typing{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-4px);opacity:1}}
+.chat-input-area{padding:16px 20px;border-top:1px solid var(--border);background:var(--bg1);flex-shrink:0}
+.chat-input-wrap{display:flex;align-items:flex-end;gap:10px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:10px 14px;transition:border-color .15s}
+.chat-input-wrap:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.chat-textarea{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:14px;font-family:var(--font);resize:none;line-height:1.5;max-height:120px;min-height:22px}
+.chat-textarea::placeholder{color:var(--text3)}
+.chat-toolbar{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.chat-tool-btn{padding:5px 10px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .12s;font-family:var(--font)}
+.chat-tool-btn:hover{background:var(--bg4);color:var(--text)}
+.send-btn{width:32px;height:32px;background:var(--accent);border:none;border-radius:8px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:all .15s}
+.send-btn:hover{background:var(--accent2);transform:scale(1.05)}
+.send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* ── BILLING ── */
+.billing-body{padding:20px 28px 28px;flex:1;overflow-y:auto}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.plan-card{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r2);padding:24px;position:relative;transition:all .2s}
+.plan-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.plan-card.featured{border-color:var(--accent);box-shadow:0 0 0 1px rgba(124,107,255,.2),0 0 32px rgba(124,107,255,.08)}
+.plan-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-size:11px;font-weight:700;padding:4px 14px;border-radius:99px;letter-spacing:.3px}
+.plan-name{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px;letter-spacing:.3px;text-transform:uppercase}
+.plan-price{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}
+.plan-amount{font-size:36px;font-weight:800;letter-spacing:-1.5px}
+.plan-per{font-size:13px;color:var(--text3)}
+.plan-desc{font-size:13px;color:var(--text2);margin:12px 0 20px}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
+.plan-features li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--text2)}
+.plan-features li::before{content:'✓';color:var(--green);font-weight:700;font-size:13px;width:16px;flex-shrink:0}
+.plan-features li.missing::before{content:'–';color:var(--text3)}
+.plan-features li.missing{color:var(--text3)}
+.plan-btn{width:100%;padding:10px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font);border:1px solid var(--border2);background:transparent;color:var(--text2)}
+.plan-btn:hover{background:var(--bg3);color:var(--text)}
+.plan-btn.active-plan{background:var(--accent);color:#fff;border-color:transparent}
+.plan-btn.active-plan:hover{background:var(--accent2)}
+.billing-section{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:16px}
+.billing-section-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.billing-section-title{font-size:14px;font-weight:600}
+.usage-bar-wrap{padding:16px 20px}
+.usage-item{margin-bottom:16px}
+.usage-item:last-child{margin-bottom:0}
+.usage-label{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:6px}
+.usage-bar{height:5px;background:var(--bg3);border-radius:99px;overflow:hidden}
+.usage-fill{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.34,1.56,.64,1)}
+.usage-fill.purple{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.usage-fill.cyan{background:linear-gradient(90deg,var(--cyan),#67e8f9)}
+.usage-fill.green{background:linear-gradient(90deg,var(--green),#4ade80)}
+
+/* ── FILES ── */
+.files-body{padding:20px 28px 28px;flex:1;overflow-y:auto}
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--r2);padding:40px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:20px;background:var(--bg1)}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--accent);background:var(--accent-glow)}
+.upload-icon{font-size:36px;margin-bottom:12px;color:var(--text3)}
+.upload-title{font-size:15px;font-weight:600;margin-bottom:6px}
+.upload-sub{font-size:13px;color:var(--text2)}
+.upload-sub span{color:var(--accent2);cursor:pointer}
+.files-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.file-card{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r2);padding:16px;cursor:pointer;transition:all .15s;position:relative}
+.file-card:hover{border-color:var(--border2);background:var(--bg2);transform:translateY(-1px)}
+.file-icon{font-size:28px;margin-bottom:10px}
+.file-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+.file-meta{font-size:11px;color:var(--text3)}
+.file-actions{display:flex;gap:6px;margin-top:10px;opacity:0;transition:opacity .15s}
+.file-card:hover .file-actions{opacity:1}
+.file-action{padding:4px 8px;border-radius:5px;font-size:11px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all .12s;font-family:var(--font)}
+.file-action:hover{background:var(--bg4);color:var(--text)}
+.upload-progress{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r2);padding:16px;margin-bottom:14px}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px}
+.progress-bar{height:4px;background:var(--bg3);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));border-radius:99px;animation:progressAnim 2s ease-out forwards}
+@keyframes progressAnim{from{width:0%}to{width:78%}}
+
+/* ── SETTINGS ── */
+.settings-layout{display:flex;flex:1;overflow:hidden}
+.settings-nav{width:190px;border-right:1px solid var(--border);padding:16px 10px;flex-shrink:0;background:var(--bg1)}
+.settings-nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;margin-bottom:1px;transition:all .12s;border:1px solid transparent}
+.settings-nav-item:hover{background:var(--bg3);color:var(--text)}
+.settings-nav-item.active{background:var(--accent-glow);border-color:rgba(124,107,255,.2);color:var(--text)}
+.settings-content{flex:1;overflow-y:auto;padding:24px 28px}
+.settings-section{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:16px}
+.settings-section-hdr{padding:16px 20px;border-bottom:1px solid var(--border)}
+.settings-section-title{font-size:14px;font-weight:600}
+.settings-section-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border)}
+.settings-row:last-child{border-bottom:none}
+.settings-label{font-size:13px;font-weight:500}
+.settings-desc{font-size:12px;color:var(--text2);margin-top:2px}
+.settings-input{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;font-family:var(--font);outline:none;transition:all .15s;width:260px}
+.settings-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow)}
+.toggle{position:relative;width:38px;height:22px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--bg3);border:1px solid var(--border2);border-radius:11px;cursor:pointer;transition:all .2s}
+.toggle-slider::before{content:'';position:absolute;height:14px;width:14px;left:3px;bottom:3px;background:var(--text3);border-radius:50%;transition:all .2s}
+.toggle input:checked + .toggle-slider{background:var(--accent);border-color:transparent}
+.toggle input:checked + .toggle-slider::before{transform:translateX(16px);background:#fff}
+.apikey-wrap{display:flex;align-items:center;gap:8px}
+.apikey-input{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;color:var(--text2);width:240px}
+.avatar-section{display:flex;align-items:center;gap:16px;padding:14px 20px}
+.avatar-big{width:64px;height:64px;background:linear-gradient(135deg,var(--accent),var(--cyan));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#fff;flex-shrink:0}
+.avatar-info{flex:1}
+.avatar-name{font-size:16px;font-weight:600;letter-spacing:-.3px}
+.avatar-email{font-size:13px;color:var(--text2);margin-top:2px}
+.member-row{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--border)}
+.member-row:last-child{border-bottom:none}
+.member-avatar{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.member-name{font-size:13px;font-weight:500;flex:1}
+.member-email{font-size:12px;color:var(--text3)}
+.role-badge{padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;background:var(--bg3);border:1px solid var(--border);color:var(--text2)}
+.role-badge.owner{background:var(--accent-glow);border-color:rgba(124,107,255,.2);color:var(--accent2)}
+
+/* ── COMMAND PALETTE ── */
+.cmd-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;display:none;align-items:flex-start;justify-content:center;padding-top:120px;backdrop-filter:blur(4px)}
+.cmd-overlay.open{display:flex}
+.cmd-modal{width:520px;background:var(--bg2);border:1px solid var(--border2);border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.7)}
+.cmd-input-wrap{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border)}
+.cmd-icon{color:var(--text3);font-size:16px}
+.cmd-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:15px;font-family:var(--font)}
+.cmd-input::placeholder{color:var(--text3)}
+.cmd-results{padding:8px}
+.cmd-section-label{padding:6px 10px;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text3)}
+.cmd-result{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .1s}
+.cmd-result:hover,.cmd-result.selected{background:var(--bg3)}
+.cmd-result-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.cmd-result-text{flex:1;font-size:13px;font-weight:500}
+.cmd-shortcut{font-size:11px;background:var(--bg4);border:1px solid var(--border);border-radius:5px;padding:2px 6px;color:var(--text3);font-family:var(--mono)}
+
+/* ── TOAST ── */
+.toast-wrap{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:12px 16px;font-size:13px;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;min-width:280px;pointer-events:all;animation:toastIn .25s ease-out;max-width:380px}
+.toast.success{border-left:3px solid var(--green)}
+.toast.error{border-left:3px solid var(--red)}
+.toast.info{border-left:3px solid var(--accent)}
+@keyframes toastIn{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes toastOut{from{transform:translateX(0);opacity:1}to{transform:translateX(20px);opacity:0}}
+.toast.out{animation:toastOut .2s ease-in forwards}
+.toast-icon{font-size:16px;flex-shrink:0}
+.toast-text{flex:1;line-height:1.4}
+.toast-close{color:var(--text3);cursor:pointer;font-size:14px;padding:2px;flex-shrink:0;background:none;border:none;font-family:var(--font)}
+
+/* ── SKELETON ── */
+.skeleton{background:var(--bg3);border-radius:4px;animation:shimmer 1.5s infinite}
+@keyframes shimmer{0%{opacity:.4}50%{opacity:.8}100%{opacity:.4}}
+
+/* ── NOTIFICATION DOT ── */
+.notif-dot{width:6px;height:6px;background:var(--red);border-radius:50%;position:absolute;top:6px;right:6px;border:2px solid var(--bg1)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .sidebar{width:60px}
+  .nav-item span,.sidebar-logo-name,.sidebar-section-label,.user-name,.user-plan{display:none}
+  .sidebar-logo{padding:14px 16px;justify-content:center}
+  .nav-item{justify-content:center;padding:10px}
+  .nav-badge{display:none}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .charts-grid{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .files-grid{grid-template-columns:repeat(2,1fr)}
+  .chat-sessions{display:none}
+  .settings-nav{display:none}
+  --sidebar:60px
+}
+@media(max-width:600px){
+  .kpi-grid{grid-template-columns:1fr}
+  .bottom-grid{grid-template-columns:1fr}
+  .files-grid{grid-template-columns:repeat(2,1fr)}
+  .realtime-bar{flex-wrap:wrap}
+  .page-hdr{flex-direction:column;align-items:flex-start;gap:10px}
+}
+
+/* ── INSIGHTS WIDGET ── */
+.insight-card{background:linear-gradient(135deg,var(--accent-glow),rgba(6,182,212,.08));border:1px solid rgba(124,107,255,.2);border-radius:var(--r2);padding:16px 18px;display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.insight-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.insight-text{font-size:13px;color:var(--text2);line-height:1.6}
+.insight-text strong{color:var(--text);font-weight:600}
+
+/* ── SEARCH ── */
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:8px 12px;cursor:text;transition:all .15s}
+.search-bar:hover{border-color:var(--border)}
+.search-bar input{background:transparent;border:none;outline:none;color:var(--text);font-size:13px;font-family:var(--font);width:180px}
+.search-bar input::placeholder{color:var(--text3)}
+</style>
+</head>
+<body>
+
+<!-- ══ AUTH SCREEN ══ -->
+<div id="auth-screen">
+  <div class="auth-bg"></div>
+  <div class="auth-grid"></div>
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-mark">N</div>
+      <div class="auth-logo-name">Neural<span>OS</span></div>
+    </div>
+    <div class="auth-title">Welcome back</div>
+    <div class="auth-sub">Sign in to your workspace</div>
+    <div class="auth-social">
+      <button class="auth-social-btn" onclick="quickLogin()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Google
+      </button>
+      <button class="auth-social-btn" onclick="quickLogin()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </button>
+    </div>
+    <div class="auth-divider">or continue with email</div>
+    <div class="auth-field">
+      <label class="auth-label">Email address</label>
+      <input class="auth-input" type="email" placeholder="you@company.com" value="sarah@neuralco.ai">
+    </div>
+    <div class="auth-field">
+      <label class="auth-label">Password</label>
+      <input class="auth-input" type="password" placeholder="••••••••" value="••••••••">
+    </div>
+    <button class="auth-btn" onclick="quickLogin()">Sign in to NeuralOS →</button>
+    <div class="auth-switch">Don't have an account? <a onclick="quickLogin()">Sign up free</a></div>
+    <div class="auth-terms">By signing in, you agree to our Terms & Privacy Policy</div>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <div class="app-inner">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-mark">N</div>
+        <div class="sidebar-logo-name">Neural<span>OS</span></div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Main</div>
+        <div class="sidebar-nav">
+          <div class="nav-item active" onclick="showPage('dashboard')">
+            <span class="nav-icon">⬡</span>
+            <span>Dashboard</span>
+          </div>
+          <div class="nav-item" onclick="showPage('chat')">
+            <span class="nav-icon">◈</span>
+            <span>AI Workspace</span>
+            <span class="nav-badge">3</span>
+          </div>
+          <div class="nav-item" onclick="showPage('files')">
+            <span class="nav-icon">◫</span>
+            <span>Files</span>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Account</div>
+        <div class="sidebar-nav">
+          <div class="nav-item" onclick="showPage('billing')">
+            <span class="nav-icon">◎</span>
+            <span>Billing</span>
+          </div>
+          <div class="nav-item" onclick="showPage('settings')">
+            <span class="nav-icon">◌</span>
+            <span>Settings</span>
+            <div class="notif-dot" style="display:none" id="settings-dot"></div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:8px 10px;margin-top:8px">
+        <div class="search-bar" onclick="openCmd()">
+          <span style="color:var(--text3);font-size:13px">⌘</span>
+          <input placeholder="Search…" readonly>
+          <span style="font-size:10px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-family:var(--mono)">K</span>
+        </div>
+      </div>
+      <div class="sidebar-user">
+        <div class="sidebar-user-inner" onclick="showPage('settings')">
+          <div class="user-avatar">SL</div>
+          <div>
+            <div class="user-name">Sarah Lin</div>
+            <div class="user-plan">Pro Plan · 12k tokens</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-hdr">
+          <div>
+            <div class="page-title">Good morning, Sarah ☀️</div>
+            <div class="page-sub">Here's what's happening with your workspace today</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-ghost" onclick="showCmd()">⌘ Command</button>
+            <button class="btn btn-primary" onclick="showPage('chat')">+ New AI Chat</button>
+          </div>
+        </div>
+        <div class="dash-body">
+          <!-- AI Insight -->
+          <div class="insight-card">
+            <div class="insight-icon">✦</div>
+            <div class="insight-text">
+              <strong>AI Insight:</strong> Your token usage is up <strong>34%</strong> this week — mostly from the customer support automation you set up. Consider upgrading to Pro Max for unlimited AI calls. Revenue per token improved by <strong>$0.0012</strong> over last month.
+            </div>
+          </div>
+          <!-- Realtime bar -->
+          <div class="realtime-bar">
+            <div class="rt-stat">
+              <div class="rt-dot"></div>
+              <div>
+                <div class="rt-label">Active Users</div>
+                <div class="rt-val" id="rt-users">1,247</div>
+              </div>
+            </div>
+            <div class="rt-stat">
+              <div class="rt-dot"></div>
+              <div>
+                <div class="rt-label">API Calls / min</div>
+                <div class="rt-val" id="rt-calls">84</div>
+              </div>
+            </div>
+            <div class="rt-stat">
+              <div class="rt-dot"></div>
+              <div>
+                <div class="rt-label">Latency (p95)</div>
+                <div class="rt-val" id="rt-latency">142ms</div>
+              </div>
+            </div>
+            <div class="rt-stat">
+              <div class="rt-dot"></div>
+              <div>
+                <div class="rt-label">Uptime</div>
+                <div class="rt-val" style="color:var(--green)">99.98%</div>
+              </div>
+            </div>
+          </div>
+          <!-- KPIs -->
+          <div class="kpi-grid">
+            <div class="kpi-card c-purple">
+              <div class="kpi-label">Monthly Revenue</div>
+              <div class="kpi-value">$48,290</div>
+              <div class="kpi-change up">↑ 18.2% vs last month</div>
+            </div>
+            <div class="kpi-card c-green">
+              <div class="kpi-label">Active Subscriptions</div>
+              <div class="kpi-value">2,841</div>
+              <div class="kpi-change up">↑ 241 new this month</div>
+            </div>
+            <div class="kpi-card c-cyan">
+              <div class="kpi-label">AI Tokens Used</div>
+              <div class="kpi-value">12.4M</div>
+              <div class="kpi-change neutral">72% of monthly limit</div>
+            </div>
+            <div class="kpi-card c-amber">
+              <div class="kpi-label">Churn Rate</div>
+              <div class="kpi-value">1.8%</div>
+              <div class="kpi-change up">↓ 0.4% improvement</div>
+            </div>
+          </div>
+          <!-- Charts -->
+          <div class="charts-grid">
+            <div class="chart-card">
+              <div class="chart-hdr">
+                <div class="chart-title">Revenue Overview</div>
+                <div class="chart-period">
+                  <button class="period-btn">7D</button>
+                  <button class="period-btn active">30D</button>
+                  <button class="period-btn">90D</button>
+                </div>
+              </div>
+              <canvas id="revenueChart" height="100"></canvas>
+            </div>
+            <div class="chart-card">
+              <div class="chart-hdr">
+                <div class="chart-title">Plan Distribution</div>
+              </div>
+              <canvas id="planChart" height="120"></canvas>
+            </div>
+          </div>
+          <!-- Bottom -->
+          <div class="bottom-grid">
+            <div class="table-card">
+              <div class="table-hdr">
+                <div class="table-title">Recent Transactions</div>
+                <button class="btn btn-ghost btn-sm">View all</button>
+              </div>
+              <table class="data-table">
+                <thead>
+                  <tr><th>Customer</th><th>Amount</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Acme Corp</td><td style="font-family:var(--mono)">$299/mo</td><td><span class="status-pill pill-green">Paid</span></td></tr>
+                  <tr><td>TechFlow Inc</td><td style="font-family:var(--mono)">$99/mo</td><td><span class="status-pill pill-green">Paid</span></td></tr>
+                  <tr><td>Startup XYZ</td><td style="font-family:var(--mono)">$499/mo</td><td><span class="status-pill pill-amber">Pending</span></td></tr>
+                  <tr><td>Devs United</td><td style="font-family:var(--mono)">$29/mo</td><td><span class="status-pill pill-green">Paid</span></td></tr>
+                  <tr><td>MegaTech Ltd</td><td style="font-family:var(--mono)">$999/mo</td><td><span class="status-pill pill-red">Failed</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="activity-feed">
+              <div class="table-hdr">
+                <div class="table-title">Activity Log</div>
+                <button class="btn btn-ghost btn-sm">Filter</button>
+              </div>
+              <div class="activity-item">
+                <div class="act-icon purple">✦</div>
+                <div class="act-body">
+                  <div class="act-text"><strong>AI analysis</strong> completed on Q3-report.pdf — 8 insights generated</div>
+                  <div class="act-time">2 minutes ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="act-icon green">+</div>
+                <div class="act-body">
+                  <div class="act-text"><strong>New user</strong> Alex Chen joined the workspace</div>
+                  <div class="act-time">14 minutes ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="act-icon cyan">↑</div>
+                <div class="act-body">
+                  <div class="act-text"><strong>Acme Corp</strong> upgraded from Pro to Enterprise</div>
+                  <div class="act-time">1 hour ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="act-icon amber">!</div>
+                <div class="act-body">
+                  <div class="act-text">API rate limit warning — 85% threshold reached</div>
+                  <div class="act-time">3 hours ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="act-icon purple">↺</div>
+                <div class="act-body">
+                  <div class="act-text"><strong>Webhook</strong> stripe.payment_succeeded fired successfully</div>
+                  <div class="act-time">5 hours ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── AI CHAT ── -->
+      <div class="page" id="page-chat">
+        <div class="chat-layout">
+          <!-- Sessions sidebar -->
+          <div class="chat-sessions">
+            <div class="chat-sessions-hdr">
+              <div class="chat-sessions-title">Conversations</div>
+              <button class="new-chat-btn" onclick="newChat()">+ New chat</button>
+            </div>
+            <div class="session-list" id="session-list">
+              <div class="session-item active">
+                <div class="session-name">Product roadmap analysis</div>
+                <div class="session-preview">What are the key features...</div>
+                <div class="session-time">Just now</div>
+              </div>
+              <div class="session-item">
+                <div class="session-name">Code review assistant</div>
+                <div class="session-preview">Here's the TypeScript interface...</div>
+                <div class="session-time">2h ago</div>
+              </div>
+              <div class="session-item">
+                <div class="session-name">Q3 report insights</div>
+                <div class="session-preview">Based on the data you shared...</div>
+                <div class="session-time">Yesterday</div>
+              </div>
+            </div>
+          </div>
+          <!-- Chat area -->
+          <div class="chat-main">
+            <div class="chat-hdr">
+              <div class="chat-hdr-left">
+                <div>
+                  <div style="font-size:14px;font-weight:600">Product roadmap analysis</div>
+                  <div style="font-size:11px;color:var(--text3);margin-top:1px">Session started 12 min ago · 8 messages</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="model-badge">✦ GPT-4o</div>
+                <button class="btn btn-ghost btn-sm">⋯</button>
+              </div>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+              <div class="msg-group">
+                <div class="msg">
+                  <div class="msg-avatar ai">N</div>
+                  <div>
+                    <div class="msg-bubble">Hello! I'm your NeuralOS assistant. I can help you analyze documents, write code, answer questions, and much more. What would you like to work on today?</div>
+                    <div class="msg-meta">NeuralOS AI · Just now</div>
+                  </div>
+                </div>
+              </div>
+              <div class="msg-group">
+                <div class="msg user">
+                  <div class="msg-avatar user">SL</div>
+                  <div>
+                    <div class="msg-bubble">Can you help me analyze our product roadmap and identify the highest-impact features for Q4?</div>
+                    <div class="msg-meta">Sarah · 10 min ago</div>
+                  </div>
+                </div>
+              </div>
+              <div class="msg-group">
+                <div class="msg">
+                  <div class="msg-avatar ai">N</div>
+                  <div>
+                    <div class="msg-bubble">Absolutely! To prioritize effectively for Q4, I'd recommend the <strong>RICE framework</strong> (Reach, Impact, Confidence, Effort). Here's how to think about it:<br><br>
+<pre>Priority Score = (Reach × Impact × Confidence) / Effort</pre>
+Based on typical SaaS patterns, features to consider:<br><br>
+<strong>🔥 High priority:</strong> AI-powered onboarding, Usage analytics dashboard, Team collaboration features<br><br>
+<strong>📊 Medium priority:</strong> Advanced API rate limiting, Custom webhooks, SSO/SAML integration<br><br>
+Could you share your current roadmap or the specific features you're evaluating? I can help score them quantitatively.</div>
+                    <div class="msg-meta">NeuralOS AI · 8 min ago · 412 tokens</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="chat-input-area">
+              <div class="chat-toolbar">
+                <button class="chat-tool-btn" onclick="showToast('File upload ready','info')">📎 Attach file</button>
+                <button class="chat-tool-btn" onclick="showToast('Web search enabled','info')">🌐 Web search</button>
+                <button class="chat-tool-btn">📝 Templates</button>
+                <div style="margin-left:auto;font-size:11px;color:var(--text3)">3,588 / 8,192 tokens</div>
+              </div>
+              <div class="chat-input-wrap">
+                <textarea class="chat-textarea" id="chat-input" placeholder="Ask NeuralOS anything…" rows="1" onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
+                <button class="send-btn" id="send-btn" onclick="sendMessage()">→</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── BILLING ── -->
+      <div class="page" id="page-billing">
+        <div class="page-hdr">
+          <div>
+            <div class="page-title">Billing &amp; Plans</div>
+            <div class="page-sub">Manage your subscription and payment methods</div>
+          </div>
+        </div>
+        <div class="billing-body">
+          <div class="pricing-grid">
+            <!-- Starter -->
+            <div class="plan-card">
+              <div class="plan-name">Starter</div>
+              <div class="plan-price">
+                <div class="plan-amount">$29</div>
+                <div class="plan-per">/month</div>
+              </div>
+              <div class="plan-desc">Perfect for individuals and small projects</div>
+              <ul class="plan-features">
+                <li>1M tokens / month</li>
+                <li>5 team members</li>
+                <li>Basic analytics</li>
+                <li>Email support</li>
+                <li class="missing">Custom AI models</li>
+                <li class="missing">SSO / SAML</li>
+                <li class="missing">SLA guarantee</li>
+              </ul>
+              <button class="plan-btn" onclick="showToast('Downgraded to Starter','info')">Downgrade</button>
+            </div>
+            <!-- Pro (featured) -->
+            <div class="plan-card featured">
+              <div class="plan-badge">Current Plan</div>
+              <div class="plan-name">Pro</div>
+              <div class="plan-price">
+                <div class="plan-amount">$99</div>
+                <div class="plan-per">/month</div>
+              </div>
+              <div class="plan-desc">For growing teams that need more AI power</div>
+              <ul class="plan-features">
+                <li>15M tokens / month</li>
+                <li>25 team members</li>
+                <li>Advanced analytics</li>
+                <li>Priority support</li>
+                <li>Custom AI models</li>
+                <li class="missing">SSO / SAML</li>
+                <li class="missing">SLA guarantee</li>
+              </ul>
+              <button class="plan-btn active-plan">Current plan ✓</button>
+            </div>
+            <!-- Enterprise -->
+            <div class="plan-card">
+              <div class="plan-name">Enterprise</div>
+              <div class="plan-price">
+                <div class="plan-amount">$299</div>
+                <div class="plan-per">/month</div>
+              </div>
+              <div class="plan-desc">For large teams with advanced requirements</div>
+              <ul class="plan-features">
+                <li>Unlimited tokens</li>
+                <li>Unlimited members</li>
+                <li>Custom dashboards</li>
+                <li>Dedicated support</li>
+                <li>Custom AI models</li>
+                <li>SSO / SAML</li>
+                <li>99.9% SLA</li>
+              </ul>
+              <button class="plan-btn" onclick="showToast('Upgrade to Enterprise — contact sales@neuralco.ai','info')">Upgrade →</button>
+            </div>
+          </div>
+          <!-- Usage meters -->
+          <div class="billing-section">
+            <div class="billing-section-hdr">
+              <div class="billing-section-title">Current Usage</div>
+              <span style="font-size:12px;color:var(--text2)">Resets Jun 1, 2026</span>
+            </div>
+            <div class="usage-bar-wrap">
+              <div class="usage-item">
+                <div class="usage-label"><span>AI Tokens</span><span>12.4M / 15M</span></div>
+                <div class="usage-bar"><div class="usage-fill purple" style="width:83%"></div></div>
+              </div>
+              <div class="usage-item">
+                <div class="usage-label"><span>Storage</span><span>4.2 GB / 10 GB</span></div>
+                <div class="usage-bar"><div class="usage-fill cyan" style="width:42%"></div></div>
+              </div>
+              <div class="usage-item">
+                <div class="usage-label"><span>API Calls</span><span>48,291 / 100,000</span></div>
+                <div class="usage-bar"><div class="usage-fill green" style="width:48%"></div></div>
+              </div>
+            </div>
+          </div>
+          <!-- Payment history -->
+          <div class="billing-section">
+            <div class="billing-section-hdr">
+              <div class="billing-section-title">Payment History</div>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Downloading invoices…','info')">⬇ Download all</button>
+            </div>
+            <table class="data-table">
+              <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Invoice</th></tr></thead>
+              <tbody>
+                <tr><td>May 1, 2026</td><td>Pro Plan — May 2026</td><td style="font-family:var(--mono)">$99.00</td><td><a style="color:var(--accent2);cursor:pointer" onclick="showToast('Downloading INV-2026-05','info')">INV-2026-05</a></td></tr>
+                <tr><td>Apr 1, 2026</td><td>Pro Plan — Apr 2026</td><td style="font-family:var(--mono)">$99.00</td><td><a style="color:var(--accent2);cursor:pointer" onclick="showToast('Downloading INV-2026-04','info')">INV-2026-04</a></td></tr>
+                <tr><td>Mar 1, 2026</td><td>Pro Plan — Mar 2026</td><td style="font-family:var(--mono)">$99.00</td><td><a style="color:var(--accent2);cursor:pointer">INV-2026-03</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── FILES ── -->
+      <div class="page" id="page-files">
+        <div class="page-hdr">
+          <div>
+            <div class="page-title">File Storage</div>
+            <div class="page-sub">4.2 GB used of 10 GB · 47 files</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-ghost">Sort ↕</button>
+            <button class="btn btn-primary" onclick="triggerUpload()">↑ Upload files</button>
+          </div>
+        </div>
+        <div class="files-body">
+          <!-- Upload zone -->
+          <div class="upload-zone" id="upload-zone" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)" onclick="triggerUpload()">
+            <div class="upload-icon">☁</div>
+            <div class="upload-title">Drag & drop files here</div>
+            <div class="upload-sub">or <span>browse your computer</span> to upload · PDF, DOCX, images, code up to 100MB</div>
+          </div>
+          <!-- Upload in progress -->
+          <div class="upload-progress" id="upload-progress" style="display:none">
+            <div class="progress-top">
+              <span>Uploading <strong>financial-analysis-2026.pdf</strong></span>
+              <span style="color:var(--text2)">78%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+          </div>
+          <!-- File grid -->
+          <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">Recent files</div>
+          <div class="files-grid">
+            <div class="file-card" onclick="showToast('Opening Q3-Report.pdf with AI…','info')">
+              <div class="file-icon">📄</div>
+              <div class="file-name">Q3-Report.pdf</div>
+              <div class="file-meta">2.4 MB · PDF · 3 days ago</div>
+              <div class="file-actions">
+                <button class="file-action">✦ Analyze</button>
+                <button class="file-action">↓</button>
+              </div>
+            </div>
+            <div class="file-card">
+              <div class="file-icon">🖼</div>
+              <div class="file-name">dashboard-mockup.png</div>
+              <div class="file-meta">1.8 MB · PNG · 5 days ago</div>
+              <div class="file-actions">
+                <button class="file-action" onclick="showToast('AI analyzing image…','info')">✦ Analyze</button>
+                <button class="file-action">↓</button>
+              </div>
+            </div>
+            <div class="file-card">
+              <div class="file-icon">📊</div>
+              <div class="file-name">revenue-data-Q3.xlsx</div>
+              <div class="file-meta">384 KB · Excel · 1 week ago</div>
+              <div class="file-actions">
+                <button class="file-action" onclick="showToast('Generating chart insights…','info')">✦ Analyze</button>
+                <button class="file-action">↓</button>
+              </div>
+            </div>
+            <div class="file-card">
+              <div class="file-icon">⌨</div>
+              <div class="file-name">api-integration.ts</div>
+              <div class="file-meta">28 KB · TypeScript · 2 weeks ago</div>
+              <div class="file-actions">
+                <button class="file-action" onclick="showToast('Code review initiated…','info')">✦ Review</button>
+                <button class="file-action">↓</button>
+              </div>
+            </div>
+            <div class="file-card">
+              <div class="file-icon">📝</div>
+              <div class="file-name">product-spec-v4.docx</div>
+              <div class="file-meta">890 KB · Word · 2 weeks ago</div>
+              <div class="file-actions">
+                <button class="file-action" onclick="showToast('Summarizing document…','info')">✦ Summarize</button>
+                <button class="file-action">↓</button>
+              </div>
+            </div>
+            <div class="file-card">
+              <div class="file-icon">🔗</div>
+              <div class="file-name">schema-v2.sql</div>
+              <div class="file-meta">14 KB · SQL · 3 weeks ago</div>
+              <div class="file-actions">
+                <button class="file-action" onclick="showToast('Analyzing schema…','info')">✦ Analyze</button>
+                <button class="file-action">↓</button>
+              </div>
+            </div>
+            <div class="file-card" style="border-style:dashed;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;min-height:130px" onclick="triggerUpload()">
+              <div style="font-size:24px;color:var(--text3);margin-bottom:6px">+</div>
+              <div style="font-size:12px;color:var(--text3)">Upload new file</div>
+            </div>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;margin-top:8px">Storage breakdown</div>
+          <div class="billing-section" style="margin-bottom:0">
+            <div class="usage-bar-wrap">
+              <div class="usage-item">
+                <div class="usage-label"><span>Documents</span><span>2.1 GB</span></div>
+                <div class="usage-bar"><div class="usage-fill purple" style="width:50%"></div></div>
+              </div>
+              <div class="usage-item">
+                <div class="usage-label"><span>Images</span><span>1.4 GB</span></div>
+                <div class="usage-bar"><div class="usage-fill cyan" style="width:33%"></div></div>
+              </div>
+              <div class="usage-item">
+                <div class="usage-label"><span>Code & Data</span><span>700 MB</span></div>
+                <div class="usage-bar"><div class="usage-fill green" style="width:17%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div class="page" id="page-settings">
+        <div class="page-hdr">
+          <div>
+            <div class="page-title">Settings</div>
+            <div class="page-sub">Manage your account and workspace preferences</div>
+          </div>
+        </div>
+        <div class="settings-layout">
+          <div class="settings-nav">
+            <div class="settings-nav-item active" onclick="switchSettingsTab(this,'profile')">👤 Profile</div>
+            <div class="settings-nav-item" onclick="switchSettingsTab(this,'team')">👥 Team</div>
+            <div class="settings-nav-item" onclick="switchSettingsTab(this,'notifications')">🔔 Notifications</div>
+            <div class="settings-nav-item" onclick="switchSettingsTab(this,'api')">🔑 API Keys</div>
+            <div class="settings-nav-item" onclick="switchSettingsTab(this,'appearance')">🎨 Appearance</div>
+            <div class="settings-nav-item" style="color:var(--red)" onclick="logout()">← Sign out</div>
+          </div>
+          <div class="settings-content">
+            <!-- Profile tab -->
+            <div id="settings-profile">
+              <div class="settings-section">
+                <div class="avatar-section">
+                  <div class="avatar-big">SL</div>
+                  <div class="avatar-info">
+                    <div class="avatar-name">Sarah Lin</div>
+                    <div class="avatar-email">sarah@neuralco.ai</div>
+                    <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="showToast('Avatar updated!','success')">Change avatar</button>
+                  </div>
+                </div>
+              </div>
+              <div class="settings-section">
+                <div class="settings-section-hdr">
+                  <div class="settings-section-title">Personal information</div>
+                  <div class="settings-section-sub">Update your name and email</div>
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">Full name</div></div>
+                  <input class="settings-input" value="Sarah Lin">
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">Email address</div></div>
+                  <input class="settings-input" value="sarah@neuralco.ai">
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">Role / title</div></div>
+                  <input class="settings-input" value="Head of Product">
+                </div>
+                <div class="settings-row" style="justify-content:flex-end;border-bottom:none">
+                  <button class="btn btn-primary" onclick="showToast('Profile saved successfully!','success')">Save changes</button>
+                </div>
+              </div>
+              <div class="settings-section">
+                <div class="settings-section-hdr">
+                  <div class="settings-section-title">Danger zone</div>
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">Delete account</div><div class="settings-desc">Permanently delete your account and all data</div></div>
+                  <button class="btn btn-danger" onclick="showToast('Please contact support to delete your account','error')">Delete account</button>
+                </div>
+              </div>
+            </div>
+            <!-- Team tab (hidden) -->
+            <div id="settings-team" style="display:none">
+              <div class="settings-section">
+                <div class="billing-section-hdr">
+                  <div class="billing-section-title">Team members (4 / 25)</div>
+                  <button class="btn btn-primary btn-sm" onclick="showToast('Invitation sent!','success')">+ Invite member</button>
+                </div>
+                <div class="member-row">
+                  <div class="member-avatar" style="background:linear-gradient(135deg,var(--accent),var(--cyan))">SL</div>
+                  <div><div class="member-name">Sarah Lin</div><div class="member-email">sarah@neuralco.ai</div></div>
+                  <span class="role-badge owner">Owner</span>
+                </div>
+                <div class="member-row">
+                  <div class="member-avatar" style="background:linear-gradient(135deg,var(--green),#4ade80)">AC</div>
+                  <div><div class="member-name">Alex Chen</div><div class="member-email">alex@neuralco.ai</div></div>
+                  <span class="role-badge">Admin</span>
+                </div>
+                <div class="member-row">
+                  <div class="member-avatar" style="background:linear-gradient(135deg,var(--amber),#fcd34d)">MK</div>
+                  <div><div class="member-name">Maya Kim</div><div class="member-email">maya@neuralco.ai</div></div>
+                  <span class="role-badge">Member</span>
+                </div>
+                <div class="member-row">
+                  <div class="member-avatar" style="background:linear-gradient(135deg,var(--red),#fb7185)">JP</div>
+                  <div><div class="member-name">James Park</div><div class="member-email">james@neuralco.ai</div></div>
+                  <span class="role-badge">Member</span>
+                </div>
+              </div>
+            </div>
+            <!-- Notifications tab -->
+            <div id="settings-notifications" style="display:none">
+              <div class="settings-section">
+                <div class="settings-section-hdr">
+                  <div class="settings-section-title">Notification preferences</div>
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">AI analysis complete</div><div class="settings-desc">Notify when AI finishes analyzing a file</div></div>
+                  <label class="toggle"><input type="checkbox" checked onchange="showToast('Preference saved','success')"><span class="toggle-slider"></span></label>
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">Payment alerts</div><div class="settings-desc">Invoices, failed payments, upgrades</div></div>
+                  <label class="toggle"><input type="checkbox" checked onchange="showToast('Preference saved','success')"><span class="toggle-slider"></span></label>
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">Team activity</div><div class="settings-desc">New members, role changes</div></div>
+                  <label class="toggle"><input type="checkbox" onchange="showToast('Preference saved','success')"><span class="toggle-slider"></span></label>
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">API usage warnings</div><div class="settings-desc">Alert at 80% and 95% of limits</div></div>
+                  <label class="toggle"><input type="checkbox" checked onchange="showToast('Preference saved','success')"><span class="toggle-slider"></span></label>
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">Product updates</div><div class="settings-desc">New features and changelog</div></div>
+                  <label class="toggle"><input type="checkbox" onchange="showToast('Preference saved','success')"><span class="toggle-slider"></span></label>
+                </div>
+              </div>
+            </div>
+            <!-- API Keys tab -->
+            <div id="settings-api" style="display:none">
+              <div class="settings-section">
+                <div class="billing-section-hdr">
+                  <div class="billing-section-title">API Keys</div>
+                  <button class="btn btn-primary btn-sm" onclick="showToast('New API key created! Copy it now — it won\'t be shown again.','success')">+ Create key</button>
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">Production key</div><div class="settings-desc">Created May 1, 2026 · Last used 2 min ago</div></div>
+                  <div class="apikey-wrap">
+                    <div class="apikey-input">nrl_prod_•••••••••••••••••••••••aK72</div>
+                    <button class="btn btn-ghost btn-sm" onclick="showToast('Copied to clipboard!','success')">Copy</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('Key revoked','error')">Revoke</button>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">Development key</div><div class="settings-desc">Created Apr 12, 2026 · Last used 3 days ago</div></div>
+                  <div class="apikey-wrap">
+                    <div class="apikey-input">nrl_dev_•••••••••••••••••••••••mN31</div>
+                    <button class="btn btn-ghost btn-sm" onclick="showToast('Copied!','success')">Copy</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('Key revoked','error')">Revoke</button>
+                  </div>
+                </div>
+              </div>
+              <div class="settings-section">
+                <div class="settings-section-hdr">
+                  <div class="settings-section-title">Webhooks</div>
+                  <div class="settings-section-sub">Receive real-time event notifications via HTTP POST</div>
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">Endpoint URL</div></div>
+                  <input class="settings-input" value="https://neuralco.ai/webhooks/neural">
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">Events</div></div>
+                  <div style="font-size:12px;color:var(--text2)">ai.complete · payment.success · user.joined</div>
+                </div>
+                <div class="settings-row" style="justify-content:flex-end;border-bottom:none">
+                  <button class="btn btn-ghost btn-sm" onclick="showToast('Test event sent!','success')">Test webhook</button>
+                  <button class="btn btn-primary" onclick="showToast('Webhook saved!','success')">Save</button>
+                </div>
+              </div>
+            </div>
+            <!-- Appearance tab -->
+            <div id="settings-appearance" style="display:none">
+              <div class="settings-section">
+                <div class="settings-section-hdr">
+                  <div class="settings-section-title">Appearance</div>
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">Theme</div><div class="settings-desc">Interface color scheme</div></div>
+                  <div style="display:flex;gap:8px">
+                    <button class="btn btn-ghost btn-sm" style="border-color:var(--accent);color:var(--accent2)" onclick="showToast('Dark mode active','info')">◑ Dark</button>
+                    <button class="btn btn-ghost btn-sm" onclick="showToast('Light mode coming soon!','info')">☀ Light</button>
+                    <button class="btn btn-ghost btn-sm" onclick="showToast('System mode active','info')">⊙ System</button>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">Accent color</div></div>
+                  <div style="display:flex;gap:8px;align-items:center">
+                    <div style="width:22px;height:22px;border-radius:50%;background:#7c6bff;cursor:pointer;border:2px solid #fff" onclick="showToast('Accent: Purple','info')"></div>
+                    <div style="width:22px;height:22px;border-radius:50%;background:#06b6d4;cursor:pointer" onclick="showToast('Accent: Cyan','info')"></div>
+                    <div style="width:22px;height:22px;border-radius:50%;background:#22c55e;cursor:pointer" onclick="showToast('Accent: Green','info')"></div>
+                    <div style="width:22px;height:22px;border-radius:50%;background:#f59e0b;cursor:pointer" onclick="showToast('Accent: Amber','info')"></div>
+                    <div style="width:22px;height:22px;border-radius:50%;background:#f43f5e;cursor:pointer" onclick="showToast('Accent: Rose','info')"></div>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div><div class="settings-label">Compact mode</div><div class="settings-desc">Reduce spacing for higher information density</div></div>
+                  <label class="toggle"><input type="checkbox" onchange="showToast('Preference saved','success')"><span class="toggle-slider"></span></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- COMMAND PALETTE -->
+<div class="cmd-overlay" id="cmd-overlay" onclick="closeCmd(event)">
+  <div class="cmd-modal">
+    <div class="cmd-input-wrap">
+      <span class="cmd-icon">⌕</span>
+      <input class="cmd-input" id="cmd-input" placeholder="Search pages, actions, settings…" oninput="filterCmd(this.value)" onkeydown="cmdKey(event)" autofocus>
+    </div>
+    <div class="cmd-results" id="cmd-results"></div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- HIDDEN FILE INPUT -->
+<input type="file" id="file-input" style="display:none" multiple onchange="handleFileSelect(this)">
+
+<script>
+// ── STATE ──
+const state = {
+  page: 'dashboard',
+  settingsTab: 'profile',
+  chatHistory: [],
+  isTyping: false,
+  rtInterval: null,
+};
+
+// ── AUTH ──
+function quickLogin() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  initCharts();
+  startRealtime();
+  showToast('Welcome back, Sarah! ✦', 'success');
+  setTimeout(() => showToast('3 new AI conversations ready', 'info'), 1200);
+}
+
+// ── NAVIGATION ──
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
+    if (item.getAttribute('onclick')?.includes(page)) item.classList.add('active');
+  });
+  state.page = page;
+  closeCmd();
+}
+
+// ── SETTINGS TABS ──
+function switchSettingsTab(el, tab) {
+  document.querySelectorAll('.settings-nav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  ['profile','team','notifications','api','appearance'].forEach(t => {
+    const el = document.getElementById('settings-' + t);
+    if (el) el.style.display = t === tab ? 'block' : 'none';
+  });
+}
+
+// ── CHARTS ──
+function initCharts() {
+  const chartDefaults = {
+    color: '#a1a1ab',
+    borderColor: '#2a2a32',
+  };
+  Chart.defaults.color = chartDefaults.color;
+  Chart.defaults.borderColor = chartDefaults.borderColor;
+
+  // Revenue chart
+  const revCtx = document.getElementById('revenueChart').getContext('2d');
+  const labels = ['Apr 17','Apr 20','Apr 23','Apr 26','Apr 29','May 2','May 5','May 8','May 11','May 14','May 17'];
+  new Chart(revCtx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Revenue',
+        data: [32000,33500,31800,35200,36800,38100,37400,40200,42800,45100,48290],
+        borderColor: '#7c6bff',
+        backgroundColor: 'rgba(124,107,255,0.06)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        pointHoverBackgroundColor: '#7c6bff',
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { display: false }, tooltip: {
+        backgroundColor: '#18181b',
+        borderColor: '#2a2a32',
+        borderWidth: 1,
+        titleColor: '#f4f4f5',
+        bodyColor: '#a1a1ab',
+        callbacks: { label: ctx => ' $' + ctx.raw.toLocaleString() }
+      }},
+      scales: {
+        x: { grid: { display: false }, ticks: { maxTicksLimit: 6, font: { size: 11 } } },
+        y: { grid: { color: '#1e1e23' }, ticks: { font: { size: 11 }, callback: v => '$' + (v/1000).toFixed(0) + 'k' } }
+      }
+    }
+  });
+
+  // Donut chart
+  const planCtx = document.getElementById('planChart').getContext('2d');
+  new Chart(planCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Pro', 'Enterprise', 'Starter'],
+      datasets: [{
+        data: [58, 28, 14],
+        backgroundColor: ['#7c6bff', '#06b6d4', '#27272e'],
+        borderColor: '#111113',
+        borderWidth: 3,
+        hoverOffset: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '72%',
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 16, font: { size: 12 } } },
+        tooltip: {
+          backgroundColor: '#18181b',
+          borderColor: '#2a2a32',
+          borderWidth: 1,
+          callbacks: { label: ctx => ' ' + ctx.label + ': ' + ctx.raw + '%' }
+        }
+      }
+    }
+  });
+}
+
+// ── REALTIME ──
+function startRealtime() {
+  state.rtInterval = setInterval(() => {
+    const users = document.getElementById('rt-users');
+    const calls = document.getElementById('rt-calls');
+    const latency = document.getElementById('rt-latency');
+    if (users) users.textContent = (1200 + Math.floor(Math.random() * 100)).toLocaleString();
+    if (calls) calls.textContent = 70 + Math.floor(Math.random() * 40);
+    if (latency) latency.textContent = (130 + Math.floor(Math.random() * 30)) + 'ms';
+  }, 2500);
+}
+
+// ── CHAT ──
+const aiResponses = [
+  "That's a great question! Based on modern SaaS patterns, I'd recommend focusing on **activation rate** as your north star metric. Users who complete 3 key actions within the first 7 days have an 85% higher retention at 90 days.\n\nHere's a framework:\n```\nActivation = Action A + Action B + Action C ≤ 7 days\nTarget: ≥ 40% activation rate\nCurrent baseline: measure first\n```\nWould you like me to help define what those key actions should be for your product?",
+  "Looking at your data, I can see a few interesting patterns:\n\n1. **Peak usage** is between 9-11am PST — consider scheduling AI-heavy operations during off-peak hours to reduce costs\n2. **Pro plan users** generate 3.4x more API calls than Starter — strong signal they're getting value\n3. Your **churn concentration** is in months 3-4, which suggests an onboarding gap\n\nI'd focus your Q4 roadmap on the month-2 to month-4 experience specifically.",
+  "I can help you think through the architecture. For a scalable AI SaaS, I'd recommend:\n\n```typescript\n// Suggested stack\ninterface AIStack {\n  auth: 'Supabase' | 'Auth0';\n  ai: 'OpenAI' | 'Anthropic';\n  queue: 'Redis' | 'BullMQ';\n  cache: 'Redis';\n  storage: 'S3' | 'Supabase Storage';\n}\n```\n\nThe key is **async job processing** for long-running AI tasks. Never block the main thread with AI calls — queue them and stream results back via WebSocket.",
+  "Great insight! The data tells a clear story here. Your **Net Revenue Retention (NRR)** is the most important metric for a SaaS at your stage. If NRR > 100%, you grow even without acquiring new customers.\n\nTo calculate it:\n- Starting MRR: $42,100\n- Expansion: +$8,200\n- Churn: -$2,010\n- **NRR = 106.4%** — excellent!\n\nThis means your existing customers are growing, which is a very healthy signal for investors.",
+];
+let aiResponseIdx = 0;
+
+function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg || state.isTyping) return;
+  input.value = '';
+  autoResize(input);
+
+  appendMessage('user', msg);
+  state.isTyping = true;
+  document.getElementById('send-btn').disabled = true;
+
+  // Show typing indicator
+  const typingEl = document.createElement('div');
+  typingEl.className = 'msg-group';
+  typingEl.id = 'typing-msg';
+  typingEl.innerHTML = `<div class="msg"><div class="msg-avatar ai">N</div><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+  document.getElementById('chat-messages').appendChild(typingEl);
+  scrollChat();
+
+  const delay = 1200 + Math.random() * 1000;
+  setTimeout(() => {
+    typingEl.remove();
+    const response = aiResponses[aiResponseIdx % aiResponses.length];
+    aiResponseIdx++;
+    appendMessage('ai', response);
+    state.isTyping = false;
+    document.getElementById('send-btn').disabled = false;
+  }, delay);
+}
+
+function appendMessage(role, text) {
+  const container = document.getElementById('chat-messages');
+  const group = document.createElement('div');
+  group.className = 'msg-group';
+  const isAI = role === 'ai';
+  const processedText = text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/```(\w*)\n?([\s\S]+?)```/g, '<pre>$2</pre>')
+    .replace(/\n/g, '<br>');
+  group.innerHTML = `
+    <div class="msg ${isAI ? '' : 'user'}">
+      <div class="msg-avatar ${isAI ? 'ai' : 'user'}">${isAI ? 'N' : 'SL'}</div>
+      <div>
+        <div class="msg-bubble">${processedText}</div>
+        <div class="msg-meta">${isAI ? 'NeuralOS AI' : 'Sarah'} · Just now${isAI ? ' · ' + (Math.floor(Math.random()*400)+100) + ' tokens' : ''}</div>
+      </div>
+    </div>`;
+  container.appendChild(group);
+  scrollChat();
+}
+
+function scrollChat() {
+  const c = document.getElementById('chat-messages');
+  if (c) c.scrollTop = c.scrollHeight;
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function newChat() {
+  const list = document.getElementById('session-list');
+  const newSession = document.createElement('div');
+  newSession.className = 'session-item active';
+  newSession.innerHTML = `<div class="session-name">New conversation</div><div class="session-preview">Start typing…</div><div class="session-time">Just now</div>`;
+  list.querySelectorAll('.session-item').forEach(i => i.classList.remove('active'));
+  list.prepend(newSession);
+  document.getElementById('chat-messages').innerHTML = `<div class="msg-group"><div class="msg"><div class="msg-avatar ai">N</div><div><div class="msg-bubble">Hello! I'm NeuralOS. What can I help you with today?</div><div class="msg-meta">NeuralOS AI · Just now</div></div></div></div>`;
+  document.getElementById('chat-input').focus();
+  showToast('New conversation started', 'info');
+}
+
+// ── FILES ──
+function triggerUpload() {
+  document.getElementById('file-input').click();
+}
+
+function handleFileSelect(input) {
+  if (input.files.length === 0) return;
+  const file = input.files[0];
+  const prog = document.getElementById('upload-progress');
+  prog.querySelector('strong').textContent = file.name;
+  prog.style.display = 'block';
+  showToast('Uploading ' + file.name + '…', 'info');
+  setTimeout(() => {
+    prog.style.display = 'none';
+    showToast(file.name + ' uploaded successfully!', 'success');
+  }, 3000);
+}
+
+function onDragOver(e) { e.preventDefault(); document.getElementById('upload-zone').classList.add('drag-over'); }
+function onDragLeave(e) { document.getElementById('upload-zone').classList.remove('drag-over'); }
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag-over');
+  const files = e.dataTransfer.files;
+  if (files.length) showToast('Uploading ' + files.length + ' file(s)…', 'info');
+}
+
+// ── COMMAND PALETTE ──
+const cmdCommands = [
+  { icon: '⬡', label: 'Dashboard', color: 'var(--accent-glow)', action: () => showPage('dashboard'), shortcut: 'G D' },
+  { icon: '◈', label: 'AI Workspace', color: 'var(--accent-glow)', action: () => showPage('chat'), shortcut: 'G C' },
+  { icon: '◫', label: 'Files', color: 'var(--cyan-dim)', action: () => showPage('files'), shortcut: 'G F' },
+  { icon: '◎', label: 'Billing', color: 'var(--green-dim)', action: () => showPage('billing'), shortcut: 'G B' },
+  { icon: '◌', label: 'Settings', color: 'var(--bg4)', action: () => showPage('settings'), shortcut: 'G S' },
+  { icon: '+', label: 'New AI Chat', color: 'var(--accent-glow)', action: () => { showPage('chat'); newChat(); } },
+  { icon: '↑', label: 'Upload file', color: 'var(--cyan-dim)', action: () => { showPage('files'); triggerUpload(); } },
+  { icon: '←', label: 'Sign out', color: 'var(--red-dim)', action: logout },
+];
+
+let cmdSelected = 0;
+
+function openCmd() {
+  document.getElementById('cmd-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('cmd-input').focus(), 50);
+  renderCmdResults('');
+}
+
+function closeCmd(e) {
+  if (!e || e.target === document.getElementById('cmd-overlay')) {
+    document.getElementById('cmd-overlay').classList.remove('open');
+    document.getElementById('cmd-input').value = '';
+  }
+}
+
+function filterCmd(q) { renderCmdResults(q); }
+
+function renderCmdResults(q) {
+  const filtered = cmdCommands.filter(c => c.label.toLowerCase().includes(q.toLowerCase()));
+  const html = filtered.map((c, i) => `
+    <div class="cmd-result${i === 0 ? ' selected' : ''}" onclick="${c.action.toString().includes('logout') ? 'logout()' : 'cmdGo(' + i + ')'}" data-idx="${i}">
+      <div class="cmd-result-icon" style="background:${c.color}">${c.icon}</div>
+      <div class="cmd-result-text">${c.label}</div>
+      ${c.shortcut ? `<span class="cmd-shortcut">${c.shortcut}</span>` : ''}
+    </div>`).join('');
+  document.getElementById('cmd-results').innerHTML = html || '<div style="padding:16px;text-align:center;color:var(--text3);font-size:13px">No results found</div>';
+  cmdSelected = 0;
+}
+
+function cmdGo(idx) {
+  const q = document.getElementById('cmd-input').value;
+  const filtered = cmdCommands.filter(c => c.label.toLowerCase().includes(q.toLowerCase()));
+  if (filtered[idx]) { filtered[idx].action(); closeCmd({}); }
+}
+
+function cmdKey(e) {
+  const results = document.querySelectorAll('.cmd-result');
+  if (e.key === 'ArrowDown') { cmdSelected = Math.min(cmdSelected + 1, results.length - 1); }
+  if (e.key === 'ArrowUp') { cmdSelected = Math.max(cmdSelected - 1, 0); }
+  if (e.key === 'Enter' && results[cmdSelected]) { results[cmdSelected].click(); return; }
+  if (e.key === 'Escape') { closeCmd({}); return; }
+  results.forEach((r, i) => r.classList.toggle('selected', i === cmdSelected));
+}
+
+// ── TOAST ──
+function showToast(msg, type = 'info') {
+  const wrap = document.getElementById('toast-wrap');
+  const toast = document.createElement('div');
+  const icons = { success: '✓', error: '✕', info: '✦' };
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span class="toast-icon">${icons[type] || '●'}</span><span class="toast-text">${msg}</span><button class="toast-close" onclick="this.parentElement.remove()">✕</button>`;
+  wrap.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('out');
+    setTimeout(() => toast.remove(), 200);
+  }, 3500);
+}
+
+// ── LOGOUT ──
+function logout() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('auth-screen').style.display = 'flex';
+  if (state.rtInterval) clearInterval(state.rtInterval);
+  showToast('Signed out successfully', 'info');
+}
+
+// ── KEYBOARD SHORTCUTS ──
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openCmd(); }
+  if (e.key === 'Escape') closeCmd({});
+});
+
+// ── PERIOD BUTTONS ──
+document.querySelectorAll('.period-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    this.closest('.chart-period').querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    showToast('Chart updated: ' + this.textContent + ' view', 'info');
+  });
+});
+</script>
+</body>
+</html>
