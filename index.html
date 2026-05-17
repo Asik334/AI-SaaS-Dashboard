@@ -87,10 +87,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 .sidebar-section{padding:12px 10px 4px}
 .sidebar-section-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);padding:0 6px;margin-bottom:4px}
 .sidebar-nav{display:flex;flex-direction:column;gap:1px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:all .12s;white-space:nowrap;position:relative;border:1px solid transparent}
-.nav-item:hover{background:var(--bg3);color:var(--text)}
-.nav-item.active{background:var(--accent-glow);color:var(--text);border-color:rgba(124,107,255,.2)}
-.nav-item.active .nav-icon{color:var(--accent2)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:all .18s cubic-bezier(.4,0,.2,1);white-space:nowrap;position:relative;border:1px solid transparent;overflow:hidden}
+.nav-item::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(124,107,255,.08),transparent);opacity:0;transition:opacity .18s}
+.nav-item:hover::before{opacity:1}
+.nav-item:hover{background:var(--bg3);color:var(--text);transform:translateX(2px)}
+.nav-item.active{background:var(--accent-glow);color:var(--text);border-color:rgba(124,107,255,.25);box-shadow:inset 0 0 0 1px rgba(124,107,255,.15),0 0 12px rgba(124,107,255,.12)}
+.nav-item.active::after{content:'';position:absolute;left:0;top:20%;bottom:20%;width:2px;background:var(--accent2);border-radius:0 2px 2px 0;box-shadow:0 0 8px var(--accent),0 0 16px rgba(124,107,255,.4)}
+.nav-item.active .nav-icon{color:var(--accent2);filter:drop-shadow(0 0 4px rgba(124,107,255,.6))}
 .nav-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0}
 .nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:99px;min-width:18px;text-align:center}
 .nav-badge.green{background:var(--green)}
@@ -329,19 +332,62 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 .role-badge.owner{background:var(--accent-glow);border-color:rgba(124,107,255,.2);color:var(--accent2)}
 
 /* ── COMMAND PALETTE ── */
-.cmd-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;display:none;align-items:flex-start;justify-content:center;padding-top:120px;backdrop-filter:blur(4px)}
-.cmd-overlay.open{display:flex}
-.cmd-modal{width:520px;background:var(--bg2);border:1px solid var(--border2);border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.7)}
-.cmd-input-wrap{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border)}
-.cmd-icon{color:var(--text3);font-size:16px}
-.cmd-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:15px;font-family:var(--font)}
+.cmd-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:999;display:none;align-items:flex-start;justify-content:center;padding-top:100px;backdrop-filter:blur(8px)}
+.cmd-overlay.open{display:flex;animation:cmdFadeIn .15s ease}
+@keyframes cmdFadeIn{from{opacity:0}to{opacity:1}}
+.cmd-modal{width:580px;background:rgba(17,17,19,.95);border:1px solid var(--border2);border-radius:18px;overflow:hidden;box-shadow:0 0 0 1px rgba(124,107,255,.15),0 32px 100px rgba(0,0,0,.8);backdrop-filter:blur(20px);transform:translateY(0);animation:cmdSlideIn .18s cubic-bezier(.34,1.56,.64,1)}
+@keyframes cmdSlideIn{from{transform:translateY(-12px);opacity:0}to{transform:translateY(0);opacity:1}}
+.cmd-input-wrap{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--border);position:relative}
+.cmd-icon{color:var(--text3);font-size:17px}
+.cmd-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:16px;font-family:var(--font);letter-spacing:-.1px}
 .cmd-input::placeholder{color:var(--text3)}
-.cmd-results{padding:8px}
-.cmd-result{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .1s}
+.cmd-esc-hint{font-size:10px;color:var(--text3);background:var(--bg4);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-family:var(--mono);flex-shrink:0}
+.cmd-tabs{display:flex;gap:2px;padding:8px 10px 4px;border-bottom:1px solid var(--border)}
+.cmd-tab{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;color:var(--text3);transition:all .12s;border:1px solid transparent}
+.cmd-tab.active{background:var(--accent-glow);color:var(--text);border-color:rgba(124,107,255,.2)}
+.cmd-results{padding:8px;max-height:360px;overflow-y:auto}
+.cmd-section-label{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);padding:8px 12px 4px}
+.cmd-result{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all .1s;position:relative}
 .cmd-result:hover,.cmd-result.selected{background:var(--bg3)}
-.cmd-result-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.cmd-result-text{flex:1;font-size:13px;font-weight:500}
-.cmd-shortcut{font-size:11px;background:var(--bg4);border:1px solid var(--border);border-radius:5px;padding:2px 6px;color:var(--text3);font-family:var(--mono)}
+.cmd-result.selected{background:rgba(124,107,255,.12);border:1px solid rgba(124,107,255,.15)}
+.cmd-result-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.cmd-result-body{flex:1;min-width:0}
+.cmd-result-text{font-size:13px;font-weight:500;color:var(--text)}
+.cmd-result-sub{font-size:11px;color:var(--text3);margin-top:1px}
+.cmd-result-text mark{background:rgba(124,107,255,.3);color:var(--accent2);border-radius:2px;padding:0 1px}
+.cmd-shortcut{display:flex;gap:3px;flex-shrink:0}
+.cmd-key{font-size:11px;background:var(--bg4);border:1px solid var(--border);border-radius:5px;padding:2px 6px;color:var(--text3);font-family:var(--mono)}
+.cmd-footer{padding:8px 14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:16px;font-size:11px;color:var(--text3)}
+.cmd-footer-hint{display:flex;align-items:center;gap:5px}
+/* Workspace switcher */
+.ws-switcher{padding:10px;border-bottom:1px solid var(--border);margin-bottom:0}
+.ws-switcher-inner{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:var(--bg2)}
+.ws-switcher-inner:hover{border-color:var(--border2);background:var(--bg3)}
+.ws-avatar{width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,var(--accent),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.ws-name{font-size:12px;font-weight:600;flex:1}
+.ws-chevron{color:var(--text3);font-size:11px;transition:transform .2s}
+.ws-switcher-inner:hover .ws-chevron{transform:rotate(180deg)}
+.ws-dropdown{display:none;position:absolute;left:10px;right:10px;top:calc(100% + 4px);background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:4px;z-index:10;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.ws-dropdown.open{display:block;animation:cmdSlideIn .15s ease}
+.ws-option{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:12px;color:var(--text2);transition:all .1s}
+.ws-option:hover{background:var(--bg3);color:var(--text)}
+.ws-option.current{color:var(--accent2)}
+/* Collapsible sidebar groups */
+.sidebar-group-hdr{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:0 6px;margin-bottom:4px;border-radius:5px;transition:background .1s}
+.sidebar-group-hdr:hover{background:var(--bg3)}
+.sidebar-group-chevron{color:var(--text3);font-size:10px;transition:transform .2s}
+.sidebar-group-chevron.collapsed{transform:rotate(-90deg)}
+.sidebar-nav{display:flex;flex-direction:column;gap:1px;transition:all .2s;overflow:hidden}
+.sidebar-nav.collapsed{display:none}
+/* Sparklines */
+.sparkline-wrap{display:flex;align-items:flex-end;gap:2px;height:28px;margin-top:8px}
+.spark-bar{flex:1;border-radius:2px;transition:height .3s ease,opacity .2s}
+.spark-bar:hover{opacity:.7}
+/* Chart tooltip premium */
+.chart-tooltip-premium{pointer-events:none;position:fixed;z-index:9999;background:rgba(17,17,19,.95);border:1px solid rgba(124,107,255,.3);border-radius:10px;padding:10px 14px;box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 0 1px rgba(124,107,255,.1);backdrop-filter:blur(12px);font-size:12px;color:var(--text);min-width:120px;transform:translate(-50%,-110%);transition:opacity .15s}
+/* Nav item hover ripple */
+@keyframes navGlow{0%{box-shadow:inset 0 0 0 1px rgba(124,107,255,.15),0 0 12px rgba(124,107,255,.12)}50%{box-shadow:inset 0 0 0 1px rgba(124,107,255,.3),0 0 20px rgba(124,107,255,.2)}100%{box-shadow:inset 0 0 0 1px rgba(124,107,255,.15),0 0 12px rgba(124,107,255,.12)}}
+.nav-item.active{animation:navGlow 3s ease-in-out infinite}
 
 /* ── TOAST ── */
 .toast-wrap{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
@@ -439,9 +485,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
         <div class="sidebar-logo-mark">N</div>
         <div class="sidebar-logo-name">Neural<span>OS</span></div>
       </div>
+      <!-- Workspace Switcher -->
+      <div class="ws-switcher" style="position:relative">
+        <div class="ws-switcher-inner" onclick="toggleWorkspaceDrop()">
+          <div class="ws-avatar">НС</div>
+          <div class="ws-name">NeuralCo SaaS</div>
+          <span class="ws-chevron">⌄</span>
+        </div>
+        <div class="ws-dropdown" id="ws-dropdown">
+          <div class="ws-option current" onclick="selectWorkspace('NeuralCo SaaS',this)"><div class="ws-avatar" style="background:linear-gradient(135deg,var(--accent),var(--cyan))">НС</div>NeuralCo SaaS <span style="margin-left:auto;color:var(--accent2);font-size:10px">●</span></div>
+          <div class="ws-option" onclick="selectWorkspace('DevLab Kz',this)"><div class="ws-avatar" style="background:linear-gradient(135deg,var(--green),#06b6d4)">ДЛ</div>DevLab Kz</div>
+          <div class="ws-option" onclick="selectWorkspace('Personal',this)"><div class="ws-avatar" style="background:linear-gradient(135deg,var(--amber),var(--red))">ЛК</div>Личный кабинет</div>
+          <div style="border-top:1px solid var(--border);margin:4px 0;padding:4px 10px 2px"><div class="ws-option" onclick="showToast('Создание рабочего пространства…','info')"><span style="font-size:16px;margin-right:4px">+</span>Новое пространство</div></div>
+        </div>
+      </div>
       <div class="sidebar-section">
-        <div class="sidebar-section-label">Главное</div>
-        <div class="sidebar-nav">
+        <div class="sidebar-section-label sidebar-group-hdr" onclick="toggleSidebarGroup(this,'nav-main')">
+          <span>Главное</span><span class="sidebar-group-chevron">▾</span>
+        </div>
+        <div class="sidebar-nav" id="nav-main">
           <div class="nav-item active" onclick="showPage('dashboard')">
             <span class="nav-icon">⬡</span>
             <span>Дашборд</span>
@@ -458,8 +520,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
         </div>
       </div>
       <div class="sidebar-section">
-        <div class="sidebar-section-label">Аккаунт</div>
-        <div class="sidebar-nav">
+        <div class="sidebar-section-label sidebar-group-hdr" onclick="toggleSidebarGroup(this,'nav-account')">
+          <span>Аккаунт</span><span class="sidebar-group-chevron">▾</span>
+        </div>
+        <div class="sidebar-nav" id="nav-account">
           <div class="nav-item" onclick="showPage('billing')">
             <span class="nav-icon">◎</span>
             <span>Тарифы</span>
@@ -545,21 +609,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
               <div class="kpi-label">Месячная выручка</div>
               <div class="kpi-value">₸21.7М</div>
               <div class="kpi-change up">↑ 18.2% к прошлому месяцу</div>
+              <div class="sparkline-wrap" id="spark-revenue"></div>
             </div>
             <div class="kpi-card c-green">
               <div class="kpi-label">Активные подписки</div>
               <div class="kpi-value">2 841</div>
               <div class="kpi-change up">↑ 241 новых за месяц</div>
+              <div class="sparkline-wrap" id="spark-subs"></div>
             </div>
             <div class="kpi-card c-cyan">
               <div class="kpi-label">Использовано AI токенов</div>
               <div class="kpi-value">12.4М</div>
               <div class="kpi-change neutral">72% месячного лимита</div>
+              <div class="sparkline-wrap" id="spark-tokens"></div>
             </div>
             <div class="kpi-card c-amber">
               <div class="kpi-label">Отток клиентов</div>
               <div class="kpi-value">1.8%</div>
               <div class="kpi-change up">↓ 0.4% улучшение</div>
+              <div class="sparkline-wrap" id="spark-churn"></div>
             </div>
           </div>
           <div class="charts-grid">
@@ -1117,6 +1185,8 @@ function quickLogin() {
   initCharts();
   startRealtime();
   updateApiStatus();
+  setTimeout(initSparklines, 100);
+  setInterval(updateSparklines, 2000);
   // Восстанавливаем ключ в настройках
   const apiKeyInput = document.getElementById('api-key-input');
   if (apiKeyInput && state.apiKey) apiKeyInput.value = state.apiKey;
@@ -1189,9 +1259,18 @@ function initCharts() {
         label: 'Выручка',
         data: [14400000,15075000,14310000,15840000,16560000,17145000,16830000,18090000,19260000,20295000,21730500],
         borderColor: '#7c6bff',
-        backgroundColor: 'rgba(124,107,255,0.06)',
-        borderWidth: 2, fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 4,
-        pointHoverBackgroundColor: '#7c6bff',
+        backgroundColor: function(context) {
+          const chart = context.chart;
+          const {ctx, chartArea} = chart;
+          if (!chartArea) return 'rgba(124,107,255,0.06)';
+          const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+          gradient.addColorStop(0, 'rgba(124,107,255,0.25)');
+          gradient.addColorStop(0.5, 'rgba(124,107,255,0.08)');
+          gradient.addColorStop(1, 'rgba(124,107,255,0)');
+          return gradient;
+        },
+        borderWidth: 2.5, fill: true, tension: 0.42, pointRadius: 0, pointHoverRadius: 5,
+        pointHoverBackgroundColor: '#7c6bff', pointHoverBorderColor: '#fff', pointHoverBorderWidth: 2,
       }]
     },
     options: {
@@ -1449,17 +1528,57 @@ function onDrop(e) {
 }
 
 // ── ПАНЕЛЬ КОМАНД ──
+// ── ENHANCED COMMAND PALETTE ──
 const cmdCommands = [
-  { icon: '⬡', label: 'Дашборд', color: 'var(--accent-glow)', action: () => showPage('dashboard'), shortcut: 'G D' },
-  { icon: '◈', label: 'AI Рабочий стол', color: 'var(--accent-glow)', action: () => showPage('chat'), shortcut: 'G C' },
-  { icon: '◫', label: 'Файлы', color: 'var(--cyan-dim)', action: () => showPage('files'), shortcut: 'G F' },
-  { icon: '◎', label: 'Тарифы', color: 'var(--green-dim)', action: () => showPage('billing'), shortcut: 'G B' },
-  { icon: '◌', label: 'Настройки', color: 'var(--bg4)', action: () => showPage('settings'), shortcut: 'G S' },
-  { icon: '+', label: 'Новый AI Чат', color: 'var(--accent-glow)', action: () => { showPage('chat'); newChat(); } },
-  { icon: '↑', label: 'Загрузить файл', color: 'var(--cyan-dim)', action: () => { showPage('files'); triggerUpload(); } },
-  { icon: '←', label: 'Выйти', color: 'var(--red-dim)', action: logout },
+  // Navigation
+  { icon: '⬡', label: 'Дашборд', sub: 'Обзор вашего рабочего пространства', color: 'var(--accent-glow)', cat: 'nav', action: () => showPage('dashboard'), keys: ['G','D'] },
+  { icon: '◈', label: 'AI Рабочий стол', sub: 'Чат с Claude AI', color: 'var(--accent-glow)', cat: 'nav', action: () => showPage('chat'), keys: ['G','C'] },
+  { icon: '◫', label: 'Файлы', sub: 'Управление документами', color: 'var(--cyan-dim)', cat: 'nav', action: () => showPage('files'), keys: ['G','F'] },
+  { icon: '◎', label: 'Тарифы', sub: 'Управление подпиской', color: 'var(--green-dim)', cat: 'nav', action: () => showPage('billing'), keys: ['G','B'] },
+  { icon: '◌', label: 'Настройки', sub: 'Аккаунт и API ключ', color: 'var(--bg4)', cat: 'nav', action: () => showPage('settings'), keys: ['G','S'] },
+  // Actions
+  { icon: '+', label: 'Новый AI Чат', sub: 'Начать новую беседу с Claude', color: 'var(--accent-glow)', cat: 'actions', action: () => { showPage('chat'); newChat(); }, keys: ['N','C'] },
+  { icon: '↑', label: 'Загрузить файл', sub: 'Загрузить документ или изображение', color: 'var(--cyan-dim)', cat: 'actions', action: () => { showPage('files'); triggerUpload(); }, keys: ['N','F'] },
+  { icon: '⌘', label: 'Открыть палитру', sub: 'Command Palette', color: 'var(--accent-glow)', cat: 'actions', action: () => {}, keys: ['⌘','K'] },
+  { icon: '↺', label: 'Обновить данные', sub: 'Синхронизировать аналитику', color: 'var(--green-dim)', cat: 'actions', action: () => showToast('Данные обновлены','success') },
+  { icon: '◎', label: 'Экспорт отчёта', sub: 'Скачать PDF дашборд', color: 'var(--amber-dim)', cat: 'actions', action: () => showToast('Экспорт запущен…','info') },
+  { icon: '!', label: 'Проверить API', sub: 'Тест соединения с Claude API', color: 'var(--cyan-dim)', cat: 'actions', action: () => { updateApiStatus(); showToast('API статус обновлён','info'); } },
+  // AI
+  { icon: '✦', label: 'Новый анализ', sub: 'AI анализ ваших данных', color: 'var(--accent-glow)', cat: 'ai', action: () => { showPage('chat'); newChat(); showToast('AI анализ готов','info'); } },
+  { icon: '◈', label: 'Claude Sonnet', sub: 'Активная модель', color: 'var(--accent-glow)', cat: 'ai', action: () => showToast('Используется Claude Sonnet','info') },
+  { icon: '◈', label: 'Claude Haiku', sub: 'Быстрая модель', color: 'var(--cyan-dim)', cat: 'ai', action: () => showToast('Переключено на Claude Haiku','info') },
+  // System
+  { icon: '←', label: 'Выйти', sub: 'Завершить сессию', color: 'var(--red-dim)', cat: 'actions', action: logout },
 ];
 let cmdSelected = 0;
+let cmdTabActive = 'all';
+
+function setCmdTab(tab, el) {
+  cmdTabActive = tab;
+  document.querySelectorAll('.cmd-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  filterCmd(document.getElementById('cmd-input').value);
+}
+
+function fuzzyScore(str, query) {
+  str = str.toLowerCase(); query = query.toLowerCase();
+  if (!query) return 1;
+  if (str.includes(query)) return 2;
+  let si = 0, qi = 0, score = 0;
+  while (si < str.length && qi < query.length) {
+    if (str[si] === query[qi]) { score++; qi++; }
+    si++;
+  }
+  return qi === query.length ? score / str.length : 0;
+}
+
+function highlightMatch(text, query) {
+  if (!query) return text;
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if (idx === -1) return text;
+  return text.slice(0,idx) + '<mark>' + text.slice(idx,idx+query.length) + '</mark>' + text.slice(idx+query.length);
+}
+
 function openCmd() {
   document.getElementById('cmd-overlay').classList.add('open');
   setTimeout(() => document.getElementById('cmd-input').focus(), 50);
@@ -1469,33 +1588,94 @@ function closeCmd(e) {
   if (!e || e.target === document.getElementById('cmd-overlay')) {
     document.getElementById('cmd-overlay').classList.remove('open');
     document.getElementById('cmd-input').value = '';
+    cmdTabActive = 'all';
+    document.querySelectorAll('.cmd-tab').forEach((t,i) => t.classList.toggle('active', i===0));
   }
 }
 function filterCmd(q) { renderCmdResults(q); }
+
 function renderCmdResults(q) {
-  const filtered = cmdCommands.filter(c => c.label.toLowerCase().includes(q.toLowerCase()));
-  const html = filtered.map((c, i) => `
-    <div class="cmd-result${i === 0 ? ' selected' : ''}" onclick="cmdGo(${i})" data-idx="${i}">
-      <div class="cmd-result-icon" style="background:${c.color}">${c.icon}</div>
-      <div class="cmd-result-text">${c.label}</div>
-      ${c.shortcut ? `<span class="cmd-shortcut">${c.shortcut}</span>` : ''}
-    </div>`).join('');
-  document.getElementById('cmd-results').innerHTML = html || '<div style="padding:16px;text-align:center;color:var(--text3);font-size:13px">Ничего не найдено</div>';
+  let cmds = cmdCommands;
+  if (cmdTabActive !== 'all') cmds = cmds.filter(c => c.cat === cmdTabActive);
+  
+  const scored = cmds
+    .map(c => ({ ...c, score: fuzzyScore(c.label + ' ' + (c.sub||''), q) }))
+    .filter(c => c.score > 0)
+    .sort((a,b) => b.score - a.score);
+
+  if (!scored.length) {
+    document.getElementById('cmd-results').innerHTML = '<div style="padding:24px;text-align:center;color:var(--text3);font-size:13px">Ничего не найдено по запросу «' + q + '»</div>';
+    return;
+  }
+
+  // Group by category
+  const groups = {};
+  const catLabels = { nav: 'Навигация', actions: 'Действия', ai: 'AI модели', system: 'Система' };
+  scored.forEach(c => {
+    const g = catLabels[c.cat] || 'Прочее';
+    if (!groups[g]) groups[g] = [];
+    groups[g].push(c);
+  });
+
+  let html = '';
+  let globalIdx = 0;
+  Object.entries(groups).forEach(([label, items]) => {
+    if (Object.keys(groups).length > 1) html += `<div class="cmd-section-label">${label}</div>`;
+    items.forEach(c => {
+      const keyHtml = c.keys ? c.keys.map(k => `<span class="cmd-key">${k}</span>`).join('') : '';
+      html += `<div class="cmd-result${globalIdx===0?' selected':''}" onclick="cmdGoItem(${cmdCommands.indexOf(c)})" data-idx="${globalIdx}">
+        <div class="cmd-result-icon" style="background:${c.color}">${c.icon}</div>
+        <div class="cmd-result-body">
+          <div class="cmd-result-text">${highlightMatch(c.label,q)}</div>
+          ${c.sub ? `<div class="cmd-result-sub">${c.sub}</div>` : ''}
+        </div>
+        ${keyHtml ? `<div class="cmd-shortcut">${keyHtml}</div>` : ''}
+      </div>`;
+      globalIdx++;
+    });
+  });
+  document.getElementById('cmd-results').innerHTML = html;
   cmdSelected = 0;
 }
-function cmdGo(idx) {
-  const q = document.getElementById('cmd-input').value;
-  const filtered = cmdCommands.filter(c => c.label.toLowerCase().includes(q.toLowerCase()));
-  if (filtered[idx]) { filtered[idx].action(); closeCmd({}); }
+
+function cmdGoItem(realIdx) {
+  if (cmdCommands[realIdx]) { cmdCommands[realIdx].action(); closeCmd({}); }
 }
+
+function cmdGo(idx) {
+  const results = document.querySelectorAll('.cmd-result');
+  if (results[idx]) results[idx].click();
+}
+
 function cmdKey(e) {
   const results = document.querySelectorAll('.cmd-result');
-  if (e.key === 'ArrowDown') { cmdSelected = Math.min(cmdSelected + 1, results.length - 1); }
-  if (e.key === 'ArrowUp') { cmdSelected = Math.max(cmdSelected - 1, 0); }
-  if (e.key === 'Enter' && results[cmdSelected]) { results[cmdSelected].click(); return; }
-  if (e.key === 'Escape') { closeCmd({}); return; }
+  if (e.key === 'ArrowDown') { e.preventDefault(); cmdSelected = Math.min(cmdSelected + 1, results.length - 1); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); cmdSelected = Math.max(cmdSelected - 1, 0); }
+  else if (e.key === 'Enter' && results[cmdSelected]) { results[cmdSelected].click(); return; }
+  else if (e.key === 'Escape') { closeCmd({}); return; }
   results.forEach((r, i) => r.classList.toggle('selected', i === cmdSelected));
+  if (results[cmdSelected]) results[cmdSelected].scrollIntoView({ block: 'nearest' });
 }
+
+// G+key shortcuts
+let gPressed = false, gTimeout;
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('cmd-overlay').classList.contains('open')) return;
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'g' || e.key === 'G') {
+    gPressed = true;
+    clearTimeout(gTimeout);
+    gTimeout = setTimeout(() => gPressed = false, 1000);
+    return;
+  }
+  if (gPressed) {
+    const map = { d:'dashboard', c:'chat', f:'files', b:'billing', s:'settings' };
+    if (map[e.key.toLowerCase()]) { showPage(map[e.key.toLowerCase()]); gPressed = false; return; }
+  }
+  if (e.key === 'n' && !e.metaKey && !e.ctrlKey) {
+    // n+c = new chat, n+f = new file
+  }
+});
 
 // ── УВЕДОМЛЕНИЯ ──
 function showToast(msg, type = 'info') {
@@ -1536,6 +1716,68 @@ if (state.apiKey) {
   const apiKeyInput = document.getElementById('api-key-input');
   if (apiKeyInput) apiKeyInput.value = state.apiKey;
 }
+
+// ── WORKSPACE SWITCHER ──
+function toggleWorkspaceDrop() {
+  const d = document.getElementById('ws-dropdown');
+  d.classList.toggle('open');
+  document.addEventListener('click', function closeWs(e) {
+    if (!e.target.closest('.ws-switcher')) { d.classList.remove('open'); document.removeEventListener('click', closeWs); }
+  }, { once: false });
+}
+function selectWorkspace(name, el) {
+  document.querySelector('.ws-name').textContent = name;
+  document.getElementById('ws-dropdown').classList.remove('open');
+  showToast('Переключено: ' + name, 'success');
+}
+
+// ── COLLAPSIBLE SIDEBAR GROUPS ──
+function toggleSidebarGroup(hdr, navId) {
+  const nav = document.getElementById(navId);
+  const chevron = hdr.querySelector('.sidebar-group-chevron');
+  nav.classList.toggle('collapsed');
+  chevron.classList.toggle('collapsed');
+}
+
+// ── SPARKLINES ──
+function renderSparkline(id, data, color) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const max = Math.max(...data);
+  el.innerHTML = data.map((v,i) => {
+    const h = Math.max(3, Math.round((v/max) * 28));
+    const opacity = 0.4 + (i / data.length) * 0.6;
+    return `<div class="spark-bar" style="height:${h}px;background:${color};opacity:${opacity};border-radius:3px 3px 0 0"></div>`;
+  }).join('');
+}
+
+function initSparklines() {
+  renderSparkline('spark-revenue', [62,71,68,75,79,81,80,86,91,96,100], 'var(--accent)');
+  renderSparkline('spark-subs', [70,72,74,76,75,79,82,84,88,92,100], 'var(--green)');
+  renderSparkline('spark-tokens', [55,60,58,65,70,68,72,76,80,88,100], 'var(--cyan)');
+  renderSparkline('spark-churn', [100,95,92,90,91,88,85,84,82,81,80], 'var(--amber)');
+}
+
+// ── LIVE SPARKLINE UPDATES ──
+function updateSparklines() {
+  const animate = (id, color) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const bars = el.querySelectorAll('.spark-bar');
+    const heights = Array.from(bars).map(b => parseInt(b.style.height));
+    const newH = Math.max(3, Math.min(28, heights[heights.length-1] + (Math.random()-0.45) * 4));
+    heights.shift(); heights.push(Math.round(newH));
+    const max = Math.max(...heights);
+    bars.forEach((b,i) => {
+      b.style.height = Math.max(3, Math.round((heights[i]/max)*28)) + 'px';
+    });
+  };
+  animate('spark-revenue','var(--accent)');
+  animate('spark-subs','var(--green)');
+  animate('spark-tokens','var(--cyan)');
+  animate('spark-churn','var(--amber)');
+}
+
 </script>
 </body>
 </html>
